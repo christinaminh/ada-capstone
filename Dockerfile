@@ -32,4 +32,4 @@ RUN npm ci --only=production
 COPY . ./
 
 # Run the web service on container startup.
-CMD [ "node", "index.js" ]
+CMD ["yarn", "run", "build"]
