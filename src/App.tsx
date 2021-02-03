@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import Upload from './components/Upload'
 
 const App: React.FC = () => {
   const VISION_API_KEY = process.env.REACT_APP_VISION_API_KEY
@@ -9,11 +10,12 @@ const App: React.FC = () => {
   const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
   const SERP_API_PATH = `https://serpapi.com/search.json`
 
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string|null>(null)
-
-
+  
   const [imgUrl, setImageUrl] = useState<string>('')
+
+ 
   const [selectedColors, setSelectedColors] = useState([])
 
 
@@ -23,7 +25,21 @@ const App: React.FC = () => {
 
 
 
-  const visionRequestBody = {
+
+
+ interface ColorResponseObject {
+    score: number,
+    pixelFraction: number,
+    color: {
+      red: number,
+      green: number,
+      blue: number
+    }
+  }
+
+  
+  const onImageSubmit = (imgUrl: string) => {
+    const visionRequestBody = {
       requests: [
         {
           image: {
@@ -39,17 +55,6 @@ const App: React.FC = () => {
       ]
     }
 
- interface ColorResponseObject {
-    score: number,
-    pixelFraction: number,
-    color: {
-      red: number,
-      green: number,
-      blue: number
-    }
-  }
-
-  const onImageSubmit = () => {
     axios.post(VISION_API_PATH, visionRequestBody)
       .then( response => {
         const colorResponse = response.data.responses[0].imagePropertiesAnnotation.dominantColors.colors
@@ -88,7 +93,7 @@ const App: React.FC = () => {
   //   title: string
   // }
 
-  const onSearchSubmit= () => {
+  const onSearchSubmit = () => {
 
     axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, queryParams)
       .then( response => {
@@ -105,23 +110,6 @@ const App: React.FC = () => {
       })
   }
 
-
-  const [selectedFileUrl, setSelectedFileUrl] = useState<string | undefined>('')
-  
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement | null>) => {
-    const file: File = (event.target.files as FileList)[0];
-    const fileUrl = URL.createObjectURL(file)
-    setSelectedFileUrl(fileUrl)
-
-    // Convert file to base64 string
-    const reader = new FileReader()
-    reader.readAsDataURL(file); 
-    reader.onloadend = () => {
-        const base64Data = reader.result
-        const trimmedBase64Url = (base64Data as string).replace('data:image/jpeg;base64,','')               
-        setImageUrl(trimmedBase64Url);
-    }    
-  }
   
 
   return (
@@ -130,10 +118,10 @@ const App: React.FC = () => {
 
       { errorMessage ? <div>{errorMessage}</div> : null }
 
-      <input type='file' id="fileItem" onChange={handleFileSelect}  ></input>
-      {/* <img src={selectedFileUrl} alt=''></img> */}
+      <Upload onImageSubmit={onImageSubmit} />
 
-      <button onClick={onImageSubmit}>Submit Image</button>
+
+      {/* <button onClick={onImageSubmit}>Submit Image</button> */}
       <button onClick={onSearchSubmit}>Search</button>
       
 
