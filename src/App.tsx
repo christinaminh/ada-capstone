@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-// import Colors from './Colors'
 
 const App: React.FC = () => {
   const VISION_API_KEY = process.env.REACT_APP_VISION_API_KEY
@@ -10,9 +9,21 @@ const App: React.FC = () => {
   const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
   const SERP_API_PATH = `https://serpapi.com/search.json`
 
-  const [imgUrl, setImageUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string|null>(null)
 
-  let body = {
+
+  const [imgUrl, setImageUrl] = useState<string>('')
+  const [selectedColors, setSelectedColors] = useState([])
+
+
+  type ObjectArray = Array<object>;
+  const [searchResults, setSearchResults] = useState<ObjectArray | null >([])
+
+
+
+
+  const visionRequestBody = {
       requests: [
         {
           image: {
@@ -28,13 +39,26 @@ const App: React.FC = () => {
       ]
     }
 
+ interface ColorResponseObject {
+    score: number,
+    pixelFraction: number,
+    color: {
+      red: number,
+      green: number,
+      blue: number
+    }
+  }
+
   const onImageSubmit = () => {
-    axios.post(VISION_API_PATH, body)
+    axios.post(VISION_API_PATH, visionRequestBody)
       .then( response => {
-        console.log(response.data.responses[0].imagePropertiesAnnotation.dominantColors.colors)
+        const colorResponse = response.data.responses[0].imagePropertiesAnnotation.dominantColors.colors
+        const dominantColors = colorResponse.map((colorObject: ColorResponseObject) => ( {...colorObject.color, score: colorObject.score} ))
+        setSelectedColors(dominantColors)
+        console.log(dominantColors)
       })
-      .catch (error => {
-        console.log(error.message)
+      .catch( error => {
+        setErrorMessage(error.message)
       })
   }
 
@@ -52,13 +76,28 @@ const App: React.FC = () => {
     }
   };
 
+
+  // interface SearchResult {
+  //   shopping_results: 
+  //   extracted_price: number,
+  //   link: string,
+  //   product_link: string,
+  //   rating: number,
+  //   thumbnail: string,
+  //   snippet: string,
+  //   title: string
+  // }
+
   const onSearchSubmit= () => {
 
     axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, queryParams)
       .then( response => {
-        // console.log(response.data.shopping_results)
-        const imgUrl = response.data.shopping_results[0].thumbnail
-        const imgTrimmedUrl = imgUrl.replace('data:image/jpeg;base64,','')
+        console.log(response.data.shopping_results)
+
+        const searchResults = response.data.shopping_results
+      
+        // const imgUrl = response.data.shopping_results[0].thumbnail
+        // const imgTrimmedUrl = imgUrl.replace('data:image/jpeg;base64,','')
         // setImageUrl(imgTrimmedUrl)
       })
       .catch (error => {
@@ -66,34 +105,37 @@ const App: React.FC = () => {
       })
   }
 
-  // function getDataUri(url, callback) {
-  //   var image = new Image();
 
-  //   image.onload = function () {
-  //       var canvas = document.createElement('canvas');
-  //       canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-  //       canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+  const [selectedFileUrl, setSelectedFileUrl] = useState<string | undefined>('')
+  
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement | null>) => {
+    const file: File = (event.target.files as FileList)[0];
+    const fileUrl = URL.createObjectURL(file)
+    setSelectedFileUrl(fileUrl)
 
-  //       canvas.getContext('2d').drawImage(this, 0, 0);
-
-  //       // Get raw image data
-  //       callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
-
-  //       // ... or get as Data URI
-  //       callback(canvas.toDataURL('image/png'));
-  //   };
-
-  //   image.src = url;
-  // }
-
-
+    // Convert file to base64 string
+    const reader = new FileReader()
+    reader.readAsDataURL(file); 
+    reader.onloadend = () => {
+        const base64Data = reader.result
+        const trimmedBase64Url = (base64Data as string).replace('data:image/jpeg;base64,','')               
+        setImageUrl(trimmedBase64Url);
+    }    
+  }
+  
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
 
-          <button onClick={onImageSubmit}>Submit Image</button>
-          <button onClick={onSearchSubmit}>Search</button>
+      { errorMessage ? <div>{errorMessage}</div> : null }
+
+      <input type='file' id="fileItem" onChange={handleFileSelect}  ></input>
+      {/* <img src={selectedFileUrl} alt=''></img> */}
+
+      <button onClick={onImageSubmit}>Submit Image</button>
+      <button onClick={onSearchSubmit}>Search</button>
+      
 
       </header>
     </div>
