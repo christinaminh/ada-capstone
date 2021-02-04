@@ -3,6 +3,8 @@ import axios from 'axios';
 import './App.css';
 import Upload from './components/Upload'
 import { fetchColorProperties } from './VisionAPI'
+import ColorPalette from './components/ColorPalette';
+import { ColorProps } from './components/Color'
 
 const App: React.FC = () => {
 
@@ -16,7 +18,7 @@ const App: React.FC = () => {
   const [imgUrl, setImageUrl] = useState<string>('')
 
  
-  const [selectedColors, setSelectedColors] = useState([])
+  const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
 
 
   type ObjectArray = Array<object>;
@@ -29,7 +31,7 @@ const App: React.FC = () => {
   const onImageSubmit = (imgUrl: string) => {
     fetchColorProperties(imgUrl)
       .then(response => {
-        console.log(response)
+        // if response is an error string, set error message
         if(typeof response === 'string'){
           setErrorMessage(response)
 
@@ -37,6 +39,7 @@ const App: React.FC = () => {
             setErrorMessage(null)
           }, 6000)
 
+        // if response is an array of color objects, set colors
         } else if( typeof response === 'object') {
           setSelectedColors(response)
         }
@@ -95,9 +98,8 @@ const App: React.FC = () => {
       { errorMessage ? <div>{errorMessage}</div> : null }
 
       <Upload onImageSubmit={onImageSubmit} />
+      <ColorPalette colors={selectedColors} />
 
-
-      {/* <button onClick={onImageSubmit}>Submit Image</button> */}
       <button onClick={onSearchSubmit}>Search</button>
       
 

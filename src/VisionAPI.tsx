@@ -13,7 +13,7 @@ export const fetchColorProperties = (imgUrl: string) => {
         features: [
           {
             maxResults: 5,
-            // type: "IMAGE_PROPERTIES"
+            type: "IMAGE_PROPERTIES"
           },
         ]
       }
