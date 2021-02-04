@@ -42,6 +42,9 @@ const App: React.FC = () => {
   }
 
   const onImageSubmit = (imgUrl: string) => {
+    setColorResults([])
+    setSearchResults([])
+
     fetchColorProperties(imgUrl)
       .then(response => {
         // if response is an error string, set error message
@@ -55,15 +58,6 @@ const App: React.FC = () => {
         // if response is an array of color objects, set colors
         } else if( typeof response === 'object') {
           setColorResults(response)
-          
-
-          // const copiedResponse = JSON.parse(JSON.stringify(response))
-
-          // copiedResponse.forEach( (colorObject: ColorProps) => {
-          //   colorObject.selected = true
-          // })
-
-          // setSelectedColors(copiedResponse)
         }
       })
   }
