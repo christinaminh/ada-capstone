@@ -15,18 +15,31 @@ const App: React.FC = () => {
   // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
   
-  const [imgUrl, setImageUrl] = useState<string>('')
+  // const [imgUrl, setImageUrl] = useState<string>('')
 
- 
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
-
+  const [colorResults, setColorResults] = useState<ColorProps[]>([])
 
   type ObjectArray = Array<object>;
   const [searchResults, setSearchResults] = useState< ObjectArray | null >([])
 
 
+  const onClickColor = (clickedColor: ColorProps) => {
+    let newSelectedColors: ColorProps[] = []
 
+    if(clickedColor.selected){
+      newSelectedColors = [...selectedColors]
+      newSelectedColors.push(clickedColor)
+    } else {
+      selectedColors.forEach( pastSelectedColor => {
+        if(clickedColor.score !== pastSelectedColor.score){
+          newSelectedColors.push(pastSelectedColor)
+        }
+      })
+    }
 
+    setSelectedColors(newSelectedColors)
+  }
 
   const onImageSubmit = (imgUrl: string) => {
     fetchColorProperties(imgUrl)
@@ -41,7 +54,16 @@ const App: React.FC = () => {
 
         // if response is an array of color objects, set colors
         } else if( typeof response === 'object') {
-          setSelectedColors(response)
+          setColorResults(response)
+          
+
+          // const copiedResponse = JSON.parse(JSON.stringify(response))
+
+          // copiedResponse.forEach( (colorObject: ColorProps) => {
+          //   colorObject.selected = true
+          // })
+
+          // setSelectedColors(copiedResponse)
         }
       })
   }
@@ -89,7 +111,7 @@ const App: React.FC = () => {
       })
   }
 
-  
+
 
   return (
     <div className='App'>
@@ -98,9 +120,10 @@ const App: React.FC = () => {
       { errorMessage ? <div>{errorMessage}</div> : null }
 
       <Upload onImageSubmit={onImageSubmit} />
-      <ColorPalette colors={selectedColors} />
+      <ColorPalette colors={colorResults} onClickColorCallback={onClickColor}/>
 
       <button onClick={onSearchSubmit}>Search</button>
+
       
 
       </header>

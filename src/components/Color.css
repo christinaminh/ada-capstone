@@ -4,3 +4,6 @@
   display: inline-block
 }
 
+.selected {
+  height: 200px;
+}

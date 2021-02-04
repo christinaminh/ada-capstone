@@ -4,14 +4,15 @@ import Color from './Color'
 
 
 interface Props {
-  colors: ColorProps[]
+  colors: ColorProps[],
+  onClickColorCallback: (color: ColorProps) => void
 }
 
-const ColorPalette: React.FC<Props> = ({colors}) => {
+const ColorPalette: React.FC<Props> = ({colors, onClickColorCallback}) => {
   return(
     <div>
       {colors.map( (color, i) => (
-        <Color key={i} red={color.red} green={color.green} blue={color.blue} score={color.score}/>
+        <Color key={i} red={color.red} green={color.green} blue={color.blue} score={color.score} selected={color.selected} onClickColorCallback={onClickColorCallback}/>
       ))}
     </div>
   )
