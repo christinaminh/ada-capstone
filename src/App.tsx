@@ -9,8 +9,8 @@ import { ColorProps } from './components/Color'
 const App: React.FC = () => {
 
 
-  const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
-  const SERP_API_PATH = `https://serpapi.com/search.json`
+  // const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
+  // const SERP_API_PATH = `https://serpapi.com/search.json`
 
   // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
@@ -20,8 +20,8 @@ const App: React.FC = () => {
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
 
-  type ObjectArray = Array<object>;
-  const [searchResults, setSearchResults] = useState< ObjectArray | null >([])
+  // type ObjectArray = Array<object>;
+  // const [searchResults, setSearchResults] = useState< ObjectArray | null >([])
 
 
   const onClickColor = (clickedColor: ColorProps) => {
@@ -43,7 +43,7 @@ const App: React.FC = () => {
 
   const onImageSubmit = (imgUrl: string) => {
     setColorResults([])
-    setSearchResults([])
+    setSelectedColors([])
 
     fetchColorProperties(imgUrl)
       .then(response => {
@@ -63,18 +63,18 @@ const App: React.FC = () => {
   }
 
 
-  const queryParams = {
-    headers:{
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    params: {
-      api_key: SERP_API_KEY,
-      q: "tv",
-      tbm: "shop",
-      hl: "en",
-      gl: "us"
-    }
-  };
+  // const queryParams = {
+  //   headers:{
+  //     'X-Requested-With': 'XMLHttpRequest'
+  //   },
+  //   params: {
+  //     api_key: SERP_API_KEY,
+  //     q: "tv",
+  //     tbm: "shop",
+  //     hl: "en",
+  //     gl: "us"
+  //   }
+  // };
 
 
   // interface SearchResult {
@@ -88,22 +88,22 @@ const App: React.FC = () => {
   //   title: string
   // }
 
-  const onSearchSubmit = () => {
+  // const onSearchSubmit = () => {
 
-    axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, queryParams)
-      .then( response => {
-        console.log(response.data.shopping_results)
+  //   axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, queryParams)
+  //     .then( response => {
+  //       console.log(response.data.shopping_results)
 
-        const searchResults = response.data.shopping_results
+  //       const searchResults = response.data.shopping_results
       
-        // const imgUrl = response.data.shopping_results[0].thumbnail
-        // const imgTrimmedUrl = imgUrl.replace('data:image/jpeg;base64,','')
-        // setImageUrl(imgTrimmedUrl)
-      })
-      .catch (error => {
-        console.log(error.message)
-      })
-  }
+  //       // const imgUrl = response.data.shopping_results[0].thumbnail
+  //       // const imgTrimmedUrl = imgUrl.replace('data:image/jpeg;base64,','')
+  //       // setImageUrl(imgTrimmedUrl)
+  //     })
+  //     .catch (error => {
+  //       console.log(error.message)
+  //     })
+  // }
 
 
 
@@ -116,7 +116,7 @@ const App: React.FC = () => {
       <Upload onImageSubmit={onImageSubmit} />
       <ColorPalette colors={colorResults} onClickColorCallback={onClickColor}/>
 
-      <button onClick={onSearchSubmit}>Search</button>
+      {/* <button onClick={onSearchSubmit}>Search</button> */}
 
       
 
