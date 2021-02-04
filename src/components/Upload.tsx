@@ -5,7 +5,6 @@ interface Props {
 }
 
 const Upload: React.FC<Props> = ({onImageSubmit}) => {
-
   
   const [selectedFileUrl, setSelectedFileUrl] = useState<string | undefined>('')
 
@@ -33,7 +32,7 @@ const Upload: React.FC<Props> = ({onImageSubmit}) => {
     <div>
       <input type='file' id="fileItem" onChange={handleFileSelect}  ></input>
       <img src={selectedFileUrl} alt=''></img>
-      <button onClick={() => onImageSubmit(imgUrl)}>Submit Image</button>
+      <button onClick={() => onImageSubmit(imgUrl)}>Extract Colors</button>
     </div>
   )
 }

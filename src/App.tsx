@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 import Upload from './components/Upload'
+import { fetchColorProperties } from './VisionAPI'
 
 const App: React.FC = () => {
-  const VISION_API_KEY = process.env.REACT_APP_VISION_API_KEY
-  const VISION_API_PATH = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`
+
 
   const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
   const SERP_API_PATH = `https://serpapi.com/search.json`
 
   // const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string|null>(null)
+  const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
   
   const [imgUrl, setImageUrl] = useState<string>('')
 
@@ -20,50 +20,26 @@ const App: React.FC = () => {
 
 
   type ObjectArray = Array<object>;
-  const [searchResults, setSearchResults] = useState<ObjectArray | null >([])
+  const [searchResults, setSearchResults] = useState< ObjectArray | null >([])
 
 
 
 
 
-
- interface ColorResponseObject {
-    score: number,
-    pixelFraction: number,
-    color: {
-      red: number,
-      green: number,
-      blue: number
-    }
-  }
-
-  
   const onImageSubmit = (imgUrl: string) => {
-    const visionRequestBody = {
-      requests: [
-        {
-          image: {
-            content: imgUrl
-          },
-          features: [
-            {
-              maxResults: 5,
-              type: "IMAGE_PROPERTIES"
-            },
-          ]
-        }
-      ]
-    }
+    fetchColorProperties(imgUrl)
+      .then(response => {
+        console.log(response)
+        if(typeof response === 'string'){
+          setErrorMessage(response)
 
-    axios.post(VISION_API_PATH, visionRequestBody)
-      .then( response => {
-        const colorResponse = response.data.responses[0].imagePropertiesAnnotation.dominantColors.colors
-        const dominantColors = colorResponse.map((colorObject: ColorResponseObject) => ( {...colorObject.color, score: colorObject.score} ))
-        setSelectedColors(dominantColors)
-        console.log(dominantColors)
-      })
-      .catch( error => {
-        setErrorMessage(error.message)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 6000)
+
+        } else if( typeof response === 'object') {
+          setSelectedColors(response)
+        }
       })
   }
 
