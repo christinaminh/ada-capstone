@@ -24,7 +24,16 @@ const Upload: React.FC<Props> = ({onImageSubmit}) => {
       const trimmedBase64Url = (base64Data as string).replace('data:image/jpeg;base64,','')  
 
       setImageUrl(trimmedBase64Url);
-    }    
+    }
+
+    // function encodeImageFileAsURL(element) {
+    //   var file = element.files[0];
+    //   var reader = new FileReader();
+    //   reader.onloadend = function() {
+    //     console.log('RESULT', reader.result)
+    //   }
+    //   reader.readAsDataURL(file);
+    // }
   }
 
 

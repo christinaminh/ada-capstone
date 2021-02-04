@@ -5,13 +5,13 @@ import Upload from './components/Upload'
 import { fetchColorProperties } from './VisionAPI'
 import ColorPalette from './components/ColorPalette';
 import { ColorProps } from './components/Color'
+import { fetchSearchResults } from './SerpAPI'
+import SearchBar from './components/SearchBar'
+import { SearchParams } from './components/SearchBar'
+import SearchResult from './components/SearchResult';
+import { SearchResultProps } from './components/SearchResult'
 
 const App: React.FC = () => {
-
-
-  // const SERP_API_KEY = process.env.REACT_APP_SERP_API_KEY
-  // const SERP_API_PATH = `https://serpapi.com/search.json`
-
   // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
   
@@ -20,10 +20,11 @@ const App: React.FC = () => {
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
 
-  // type ObjectArray = Array<object>;
-  // const [searchResults, setSearchResults] = useState< ObjectArray | null >([])
+
+  const [searchResults, setSearchResults] = useState([])
 
 
+  // Select/Deselect color from color palette
   const onClickColor = (clickedColor: ColorProps) => {
     let newSelectedColors: ColorProps[] = []
 
@@ -41,6 +42,8 @@ const App: React.FC = () => {
     setSelectedColors(newSelectedColors)
   }
 
+
+  // After uploading image, call Vision API to determine dominant colors in image
   const onImageSubmit = (imgUrl: string) => {
     setColorResults([])
     setSelectedColors([])
@@ -62,48 +65,25 @@ const App: React.FC = () => {
       })
   }
 
+  const onSearchSubmit = (searchParams: SearchParams) => {
+    setSearchResults([])
 
-  // const queryParams = {
-  //   headers:{
-  //     'X-Requested-With': 'XMLHttpRequest'
-  //   },
-  //   params: {
-  //     api_key: SERP_API_KEY,
-  //     q: "tv",
-  //     tbm: "shop",
-  //     hl: "en",
-  //     gl: "us"
-  //   }
-  // };
+    fetchSearchResults(searchParams)
+      .then( response => {
+        // if response is an error string, set error message
+        if(typeof response === 'string'){
+          setErrorMessage(response)
 
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 6000)
 
-  // interface SearchResult {
-  //   shopping_results: 
-  //   extracted_price: number,
-  //   link: string,
-  //   product_link: string,
-  //   rating: number,
-  //   thumbnail: string,
-  //   snippet: string,
-  //   title: string
-  // }
-
-  // const onSearchSubmit = () => {
-
-  //   axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, queryParams)
-  //     .then( response => {
-  //       console.log(response.data.shopping_results)
-
-  //       const searchResults = response.data.shopping_results
-      
-  //       // const imgUrl = response.data.shopping_results[0].thumbnail
-  //       // const imgTrimmedUrl = imgUrl.replace('data:image/jpeg;base64,','')
-  //       // setImageUrl(imgTrimmedUrl)
-  //     })
-  //     .catch (error => {
-  //       console.log(error.message)
-  //     })
-  // }
+        // if response is an array of search results, set searchResults
+        } else if( typeof response === 'object') {
+          setSearchResults(response)
+        }
+      })
+  }
 
 
 
@@ -111,16 +91,23 @@ const App: React.FC = () => {
     <div className='App'>
       <header className='App-header'>
 
-      { errorMessage ? <div>{errorMessage}</div> : null }
+
+    <main>
+    { errorMessage ? <div>{errorMessage}</div> : null }
 
       <Upload onImageSubmit={onImageSubmit} />
       <ColorPalette colors={colorResults} onClickColorCallback={onClickColor}/>
 
       {/* <button onClick={onSearchSubmit}>Search</button> */}
+      <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
 
-      
+      { (searchResults as SearchResultProps[]).map( ( (item, i) => (
+        <SearchResult key={i} title={item.title} thumbnail={item.thumbnail}/>
+      )))}
 
-      </header>
+    </main>
+    </header>
+
     </div>
   );
 }
