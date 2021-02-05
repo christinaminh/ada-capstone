@@ -10,7 +10,8 @@ import SearchBar from './components/SearchBar'
 import { SearchParams } from './components/SearchBar'
 import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
 import { SearchResultProps } from './components/ColorMatchedSearchResult'
-import { filterSearchByColor } from './CompareColors'
+// import { filterSearchByColor } from './CompareColors'
+import { deltaE } from './CompareColors'
 
 const App: React.FC = () => {
   // const [loading, setLoading] = useState(false)
@@ -21,7 +22,7 @@ const App: React.FC = () => {
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
 
-  const [searchResults, setSearchResults] = useState([])
+  const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
 
   const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
 
@@ -46,8 +47,8 @@ const App: React.FC = () => {
 
   // After uploading image, call Vision API to determine dominant colors in image
   const onImageSubmit = (imgUrl: string) => {
-    setColorResults([])
-    setSelectedColors([])
+    // setColorResults([])
+    // setSelectedColors([])
 
     fetchColorProperties(imgUrl, 1)
       .then(response => {
@@ -90,16 +91,49 @@ const App: React.FC = () => {
     }
   }
 
+
   const initialRender = useRef(true)
 
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
     } else {
-      const colorMatchedResults: SearchResultProps[] = filterSearchByColor(selectedColors, searchResults)
 
-      setColorMatchedResults(colorMatchedResults)
+      // const newColorMatchedResults: Promise<SearchResultProps[]> = filterSearchByColor(selectedColors, searchResults)
+
+      // setColorMatchedResults(newColorMatchedResults)
+      // console.log("SHOULD SET MATCHES BEFORE HERE", newColorMatchedResults)
+    const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
+      const colorMatches: SearchResultProps[] = []
+
+      for( const searchResult of searchResults) {
+      // searchResults.forEach( searchResult => {
+        await fetchColorProperties(searchResult.thumbnail, 2)
+          .then( colorPropertiesOfSearchResults  => {
+            if( typeof colorPropertiesOfSearchResults === 'object') {
+    
+              for(const searchResultColorObject of colorPropertiesOfSearchResults) {
+                const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
+        
+                console.log("color difference", colorDiff)
+        
+                if(colorDiff < 20){
+                  console.log('color match!')
+                  console.log('search result that matched', searchResult)
+                  colorMatches.push(searchResult)
+                  break
+                }
+              }
+            }
+          })
+      }
+      // return colorMatches
+      setColorMatchedResults(colorMatches)
     }
+
+    filterSearchByColor(selectedColors, searchResults)
+
+  }
 
   }, [searchResults, selectedColors])
 

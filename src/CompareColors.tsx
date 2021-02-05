@@ -1,9 +1,9 @@
-import { fetchColorProperties } from './VisionAPI'
-import { ColorProps } from './components/Color'
-import { SearchResultProps } from './components/ColorMatchedSearchResult'
+// import { fetchColorProperties } from './VisionAPI'
+// import { ColorProps } from './components/Color'
+// import { SearchResultProps } from './components/ColorMatchedSearchResult'
 
 
-const deltaE = (rgbA: number[], rgbB: number[]) => {
+export const deltaE = (rgbA: number[], rgbB: number[]) => {
   let labA = rgb2lab(rgbA);
   let labB = rgb2lab(rgbB);
   let deltaL = labA[0] - labB[0];
@@ -23,7 +23,7 @@ const deltaE = (rgbA: number[], rgbB: number[]) => {
   return i < 0 ? 0 : Math.sqrt(i);
 }
 
-const rgb2lab = (rgb: number[]) => {
+export const rgb2lab = (rgb: number[]) => {
   let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, x, y, z;
   r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
   g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
@@ -37,41 +37,67 @@ const rgb2lab = (rgb: number[]) => {
   return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 }
 
-export const filterSearchByColor = (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
-  const colorMatches: SearchResultProps[] = []
-  console.log('inside filter search by color')
-  console.log("search results:", searchResults)
+// export const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
+//   const colorMatches: SearchResultProps[] = []
 
-  searchResults.forEach( searchResult => {
+//   for( const searchResult of searchResults) {
+//   // searchResults.forEach( searchResult => {
+//     const colorPropertiesResults = await fetchColorProperties(searchResult.thumbnail, 2)
 
-    fetchColorProperties(searchResult.thumbnail, 2)
-      .then( response  => {
-        console.log()
-        console.log("search result title:", searchResult.title)
-        console.log("response:", response)
+//     if( typeof colorPropertiesResults === 'object') {
+
+//       for(const searchResultColorObject of colorPropertiesResults) {
+//         const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
+
+//         console.log("color difference", colorDiff)
+
+//         if(colorDiff < 20){
+//           console.log('color match!')
+//           console.log('search result that matched', searchResult)
+//           colorMatches.push(searchResult)
+
+//           break
+//         }
+//       }
+//     }
+//   }
+
+//   return colorMatches
+// }
+
+      // .then( response  => {
+
+        // console.log("search result title:", searchResult.title)
+        // console.log("response:", response)
         // response is an array of color annotation objects
-        if( typeof response === 'object') {
-          // iterating over 2 search result color objects
+        // if( typeof response === 'object') {
+        //   // iterating over 2 search result color objects
 
-          for(const searchResultColorObject of response) {
-            const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
+        //   for(const searchResultColorObject of response) {
+        //     const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
 
-            console.log("color difference", colorDiff)
+        //     console.log("color difference", colorDiff)
 
-            if(colorDiff < 20){
-              console.log('color match!')
-              console.log('search result that matched', searchResult)
-              colorMatches.push(searchResult)
+        //     if(colorDiff < 20){
+        //       console.log('color match!')
+        //       console.log('search result that matched', searchResult)
+        //       colorMatches.push(searchResult)
 
-              break
-            }
-          }
+        //       break
+        //     }
+        //   }
 
-          console.log('after the break')
-          console.log(colorMatches)
-        }
-      })  
-  })
+          
+//         }
+//       })
+//     // .then(colorMatches => {
+//     //   console.log("THEN ALL color matches:", colorMatches)
+//     //   return colorMatches
+//     // })  
+//   })
 
-  return colorMatches
-}
+//   console.log("THEN ALL color matches:", colorMatches)
+
+//   return colorMatches
+// }
+

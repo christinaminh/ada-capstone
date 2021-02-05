@@ -72,8 +72,8 @@ export const fetchSearchResults = (searchParams: SearchParams) => {
   // }
 
 
-  // return axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, APIParams)
-  return axios.get(SERP_API_PATH, APIParams)
+    return axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, APIParams)
+  // return axios.get(SERP_API_PATH, APIParams)
 
     .then( response => {
       const searchResults = response.data.shopping_results
@@ -90,7 +90,9 @@ export const fetchSearchResults = (searchParams: SearchParams) => {
       const parsedSearchResults = searchResults.map((searchObject: SearchResponse) => (
         { 
         title: trimTitle(searchObject.title),
-        thumbnail: (searchObject.thumbnail).replace(/^data:image\/(png|jpg|webp);base64,/, "")
+        // thumbnail: (searchObject.thumbnail).replace(/^data:image\/(png|jpg|webp);base64,/, "")
+        thumbnail: searchObject.thumbnail
+
       } ))
 
       return parsedSearchResults

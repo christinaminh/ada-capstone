@@ -25,6 +25,8 @@ import { ColorProps } from './components/Color'
 //   img.src = imgUrl;
 // }
 
+
+
 export const fetchColorProperties = async (imgUrl: string, maxNumResults: number) => {
   const VISION_API_KEY = process.env.REACT_APP_VISION_API_KEY
   const VISION_API_PATH = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`
@@ -33,12 +35,12 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
 
 
   // let base64Url
-
   // if(imgUrl.startsWith('http')){
   //   base64Url = await getBase64Image(imgUrl, (dataURL) => {return dataURL} )
   // } else {
   //   base64Url = imgUrl
   // }
+
 
   if(imgUrl.startsWith('http')) {
     visionRequestBody = {
@@ -59,15 +61,13 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
       ]
     }
     
-  } else {
-
-  
+  } else {  
     visionRequestBody = {
       requests: [
         {
           image: {
             // content: base64Url
-            content: imgUrl
+            content: imgUrl.replace(/^data:image\/(png|jpg|webp);base64,/, "")
           },
           features: [
             {
@@ -95,8 +95,8 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
   return axios.post(VISION_API_PATH, visionRequestBody)
     .then( response => {
       if(response.data.responses[0].imagePropertiesAnnotation === undefined) {
-        // console.log("BAD search result url:", imgUrl)
-        // console.log('RESPONSE when CANT READ IMAGE', response)
+        console.log("BAD search result url:", imgUrl)
+        console.log('RESPONSE when CANT READ IMAGE', response)
         return 'Error: Cannot read image.'
       } else {
         // console.log("GOOD search result url:", imgUrl)
