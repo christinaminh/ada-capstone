@@ -15,7 +15,7 @@ const SearchResult: React.FC<SearchResultProps> = ({title, thumbnail}) => {
   return(
     <div>
       {title}
-      <img src={thumbnail}></img>
+      <img src={thumbnail} alt='thumbnail'></img>
     </div>
   )
 }

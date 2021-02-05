@@ -38,7 +38,7 @@ const SearchBar: React.FC<SearchBarProps> = ({onSearchSubmitCallback}) => {
         />
 
         <InputGroup.Append>
-          <Button onClick={() => onSearchSubmitCallback(searchParams)}variant="outline-secondary">Search</Button>
+          <Button onClick={() => onSearchSubmitCallback(searchParams)}variant="outline-secondary">FIND MATCHES</Button>
         </InputGroup.Append>
       </InputGroup>
     </div>

@@ -2,9 +2,7 @@
  import './Color.css'
 
  export interface ColorProps {
-  red: number,
-  green: number,
-  blue: number,
+  color: [number, number, number],
   score: number,
   selected?: boolean
  }
@@ -17,16 +15,16 @@
 const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
   const [selected, setSelected] = useState(true)
 
+  const [red, green, blue] = props.color
+
   const colorItemStyle = {
-    backgroundColor: `rgb(${props.red}, ${props.green}, ${props.blue})`
+    backgroundColor: `rgb(${red}, ${green}, ${blue})`
   }
 
 
   const handleClickedColor = () => {
     const color = {
-      red: props.red,
-      green: props.green,
-      blue: props.blue,
+      color: props.color,
       score: props.score,
       selected: !selected
     }
