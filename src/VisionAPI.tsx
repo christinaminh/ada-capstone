@@ -91,6 +91,7 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
     }
   }
 
+
   return axios.post(VISION_API_PATH, visionRequestBody)
     .then( response => {
       if(response.data.responses[0].imagePropertiesAnnotation === undefined) {
