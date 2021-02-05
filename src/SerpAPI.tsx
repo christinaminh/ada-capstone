@@ -72,8 +72,8 @@ export const fetchSearchResults = (searchParams: SearchParams) => {
   // }
 
 
-  return axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, APIParams)
-  // return axios.get(SERP_API_PATH, APIParams)
+  // return axios.get('https://cors-anywhere.herokuapp.com/'+SERP_API_PATH, APIParams)
+  return axios.get(SERP_API_PATH, APIParams)
 
     .then( response => {
       const searchResults = response.data.shopping_results
