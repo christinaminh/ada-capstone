@@ -115,7 +115,6 @@ const App: React.FC = () => {
       <Upload onImageSubmit={onImageSubmit} />
       <ColorPalette colors={colorResults} onClickColorCallback={onClickColor}/>
 
-      {/* <button onClick={onSearchSubmit}>Search</button> */}
       <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
 
       { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
