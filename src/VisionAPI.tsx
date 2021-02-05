@@ -1,29 +1,29 @@
 import axios from 'axios'
 import { ColorProps } from './components/Color'
 
-const getBase64Image = async (imgUrl: string, callback: (dataURL: string) => void) => {
-  const img = new Image();
+// const getBase64Image = async (imgUrl: string, callback: (dataURL: string) => void) => {
+//   const img = new Image();
 
-  // onload fires when the image is fully loadded, and has width and height
-  console.log('LOADING BASE64 IMAGE')
-  img.onload = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    ctx.drawImage(img, 0, 0);
-    let dataURL = canvas.toDataURL("image/png").replace(/^data:image\/(png|jpg|webp);base64,/, "")
-        // dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+//   // onload fires when the image is fully loadded, and has width and height
+//   console.log('LOADING BASE64 IMAGE')
+//   img.onload = () => {
+//     const canvas = document.createElement("canvas");
+//     canvas.width = img.width;
+//     canvas.height = img.height;
+//     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+//     ctx.drawImage(img, 0, 0);
+//     let dataURL = canvas.toDataURL("image/png").replace(/^data:image\/(png|jpg|webp);base64,/, "")
+//         // dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 
     
-    callback(dataURL); // the base64 string
+//     callback(dataURL); // the base64 string
 
-  };
+//   };
 
-  // set attributes and src 
-  img.setAttribute('crossOrigin', 'anonymous'); //
-  img.src = imgUrl;
-}
+//   // set attributes and src 
+//   img.setAttribute('crossOrigin', 'anonymous'); //
+//   img.src = imgUrl;
+// }
 
 export const fetchColorProperties = async (imgUrl: string, maxNumResults: number) => {
   const VISION_API_KEY = process.env.REACT_APP_VISION_API_KEY
@@ -32,41 +32,22 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
   let visionRequestBody
 
 
-  let base64Url
+  // let base64Url
 
-  if(imgUrl.startsWith('http')){
-    base64Url = await getBase64Image(imgUrl, (dataURL) => {return dataURL} )
-  } else {
-    base64Url = imgUrl
-  }
-
-  // if(imgUrl.startsWith('http')) {
-  //   visionRequestBody = {
-  //     requests: [
-  //       {
-  //         image: {
-  //           source: {
-  //             imageUri: imgUrl
-  //           }
-  //         },
-  //         features: [
-  //           {
-  //             maxResults: maxNumResults,
-  //             type: "IMAGE_PROPERTIES"
-  //           },
-  //         ]
-  //       }
-  //     ]
-  //   }
-    
+  // if(imgUrl.startsWith('http')){
+  //   base64Url = await getBase64Image(imgUrl, (dataURL) => {return dataURL} )
   // } else {
+  //   base64Url = imgUrl
+  // }
 
-  
+  if(imgUrl.startsWith('http')) {
     visionRequestBody = {
       requests: [
         {
           image: {
-            content: base64Url
+            source: {
+              imageUri: imgUrl
+            }
           },
           features: [
             {
@@ -77,7 +58,27 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
         }
       ]
     }
-  // } 
+    
+  } else {
+
+  
+    visionRequestBody = {
+      requests: [
+        {
+          image: {
+            // content: base64Url
+            content: imgUrl
+          },
+          features: [
+            {
+              maxResults: maxNumResults,
+              type: "IMAGE_PROPERTIES"
+            },
+          ]
+        }
+      ]
+    }
+  } 
   
 
   interface ColorResponseObject {
