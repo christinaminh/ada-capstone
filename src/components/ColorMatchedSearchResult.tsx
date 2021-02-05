@@ -5,17 +5,17 @@ export interface SearchResultProps {
   // link: string,
   // product_link: string,
   // rating: number,
-  thumbnail: string,
+  imageUrl: string,
   // snippet: string,
   title: string
 }
 
 
-const SearchResult: React.FC<SearchResultProps> = ({title, thumbnail}) => {
+const SearchResult: React.FC<SearchResultProps> = ({title, imageUrl}) => {
   return(
     <div>
       {title}
-      <img src={thumbnail} alt='thumbnail'></img>
+      <img src={imageUrl} alt='thumbnail'></img>
     </div>
   )
 }

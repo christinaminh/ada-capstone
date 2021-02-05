@@ -1,8 +1,3 @@
-// import { fetchColorProperties } from './VisionAPI'
-// import { ColorProps } from './components/Color'
-// import { SearchResultProps } from './components/ColorMatchedSearchResult'
-
-
 export const deltaE = (rgbA: number[], rgbB: number[]) => {
   let labA = rgb2lab(rgbA);
   let labB = rgb2lab(rgbB);
@@ -36,68 +31,3 @@ export const rgb2lab = (rgb: number[]) => {
   z = (z > 0.008856) ? Math.pow(z, 1/3) : (7.787 * z) + 16/116;
   return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 }
-
-// export const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
-//   const colorMatches: SearchResultProps[] = []
-
-//   for( const searchResult of searchResults) {
-//   // searchResults.forEach( searchResult => {
-//     const colorPropertiesResults = await fetchColorProperties(searchResult.thumbnail, 2)
-
-//     if( typeof colorPropertiesResults === 'object') {
-
-//       for(const searchResultColorObject of colorPropertiesResults) {
-//         const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
-
-//         console.log("color difference", colorDiff)
-
-//         if(colorDiff < 20){
-//           console.log('color match!')
-//           console.log('search result that matched', searchResult)
-//           colorMatches.push(searchResult)
-
-//           break
-//         }
-//       }
-//     }
-//   }
-
-//   return colorMatches
-// }
-
-      // .then( response  => {
-
-        // console.log("search result title:", searchResult.title)
-        // console.log("response:", response)
-        // response is an array of color annotation objects
-        // if( typeof response === 'object') {
-        //   // iterating over 2 search result color objects
-
-        //   for(const searchResultColorObject of response) {
-        //     const colorDiff = deltaE(searchResultColorObject.color, selectedColors[0].color)
-
-        //     console.log("color difference", colorDiff)
-
-        //     if(colorDiff < 20){
-        //       console.log('color match!')
-        //       console.log('search result that matched', searchResult)
-        //       colorMatches.push(searchResult)
-
-        //       break
-        //     }
-        //   }
-
-          
-//         }
-//       })
-//     // .then(colorMatches => {
-//     //   console.log("THEN ALL color matches:", colorMatches)
-//     //   return colorMatches
-//     // })  
-//   })
-
-//   console.log("THEN ALL color matches:", colorMatches)
-
-//   return colorMatches
-// }
-

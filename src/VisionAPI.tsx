@@ -42,7 +42,7 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
   // }
 
 
-  if(imgUrl.startsWith('http')) {
+  // if(imgUrl.startsWith('http')) {
     visionRequestBody = {
       requests: [
         {
@@ -61,24 +61,24 @@ export const fetchColorProperties = async (imgUrl: string, maxNumResults: number
       ]
     }
     
-  } else {  
-    visionRequestBody = {
-      requests: [
-        {
-          image: {
-            // content: base64Url
-            content: imgUrl.replace(/^data:image\/(png|jpg|webp);base64,/, "")
-          },
-          features: [
-            {
-              maxResults: maxNumResults,
-              type: "IMAGE_PROPERTIES"
-            },
-          ]
-        }
-      ]
-    }
-  } 
+  // } else {  
+  //   visionRequestBody = {
+  //     requests: [
+  //       {
+  //         image: {
+  //           // content: base64Url
+  //           content: imgUrl.replace(/^data:image\/(png|jpg|webp);base64,/, "")
+  //         },
+  //         features: [
+  //           {
+  //             maxResults: maxNumResults,
+  //             type: "IMAGE_PROPERTIES"
+  //           },
+  //         ]
+  //       }
+  //     ]
+  //   }
+  // } 
   
 
   interface ColorResponseObject {

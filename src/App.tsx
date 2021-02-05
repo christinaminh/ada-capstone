@@ -10,21 +10,38 @@ import SearchBar from './components/SearchBar'
 import { SearchParams } from './components/SearchBar'
 import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
 import { SearchResultProps } from './components/ColorMatchedSearchResult'
-// import { filterSearchByColor } from './CompareColors'
 import { deltaE } from './CompareColors'
+
+import { fetchSerpWowSearchResults } from './SerpWowAPI'
 
 const App: React.FC = () => {
   // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
-  
-  // const [imgUrl, setImageUrl] = useState<string>('')
-
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
 
   const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
 
   const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
+
+
+  // const [colors, setColors] = useState([])
+
+  // const renderSwatches = () => {
+
+  //   return colors.map((color, id) => {
+  //     return (
+  //       <div
+  //         key={id}
+  //         style={{
+  //           backgroundColor: color,
+  //           width: 100,
+  //           height: 100
+  //         }}
+  //       />
+  //     )
+  //   })
+  // }
 
   // Select/Deselect color from color palette
   const onClickColor = (clickedColor: ColorProps) => {
@@ -73,7 +90,7 @@ const App: React.FC = () => {
     if(selectedColors.length === 0){
       setErrorMessage('Select colors to search')
     } else {
-      fetchSearchResults(searchParams)
+      fetchSerpWowSearchResults(searchParams)
         .then( response => {
           // if response is an error string, set error message
           if(typeof response === 'string'){
@@ -99,16 +116,11 @@ const App: React.FC = () => {
       initialRender.current = false
     } else {
 
-      // const newColorMatchedResults: Promise<SearchResultProps[]> = filterSearchByColor(selectedColors, searchResults)
-
-      // setColorMatchedResults(newColorMatchedResults)
-      // console.log("SHOULD SET MATCHES BEFORE HERE", newColorMatchedResults)
     const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
       const colorMatches: SearchResultProps[] = []
 
       for( const searchResult of searchResults) {
-      // searchResults.forEach( searchResult => {
-        await fetchColorProperties(searchResult.thumbnail, 2)
+        await fetchColorProperties(searchResult.imageUrl, 2)
           .then( colorPropertiesOfSearchResults  => {
             if( typeof colorPropertiesOfSearchResults === 'object') {
     
@@ -127,7 +139,6 @@ const App: React.FC = () => {
             }
           })
       }
-      // return colorMatches
       setColorMatchedResults(colorMatches)
     }
 
@@ -137,7 +148,7 @@ const App: React.FC = () => {
 
   }, [searchResults, selectedColors])
 
-  
+
 
   return (
     <div className='App'>
@@ -152,7 +163,7 @@ const App: React.FC = () => {
       <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
 
       { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-        <ColorMatchedSearchResult key={i} title={item.title} thumbnail={item.thumbnail}/>
+        <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl}/>
       )))}
 
     </main>
