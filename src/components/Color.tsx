@@ -2,8 +2,8 @@
  import './Color.css'
 
  export interface ColorProps {
-  color: [number, number, number],
-  score: number,
+  id: number,
+  color: number[],
   selected?: boolean
  }
 
@@ -14,7 +14,7 @@
 
 const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
   const [selected, setSelected] = useState(true)
-
+  
   const [red, green, blue] = props.color
 
   const colorItemStyle = {
@@ -24,8 +24,9 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
 
   const handleClickedColor = () => {
     const color = {
+      id: props.id,
       color: props.color,
-      score: props.score,
+      // score: props.score,
       selected: !selected
     }
 

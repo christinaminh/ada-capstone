@@ -12,7 +12,7 @@ const ColorPalette: React.FC<Props> = ({colors, onClickColorCallback}) => {
   return(
     <div>
       {colors.map( (color, i) => (
-        <Color key={i} color={color.color} score={color.score} selected={color.selected} onClickColorCallback={onClickColorCallback}/>
+        <Color key={i} color={color.color} id={color.id} onClickColorCallback={onClickColorCallback}/>
       ))}
     </div>
   )

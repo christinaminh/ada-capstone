@@ -50,6 +50,7 @@ export const fetchSerpWowSearchResults = (searchParams: SearchParams) => {
 
     }
   };
+  console.log('INSIDE fetchSerpWowSearchResults')
 
     return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
     .then( response => {
