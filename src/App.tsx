@@ -7,7 +7,7 @@ import Upload from './components/Upload'
 
 import ColorPalette from './components/ColorPalette';
 import { ColorProps } from './components/Color'
-import { fetchSearchResults } from './SerpAPI'
+// import { fetchSearchResults } from './SerpAPI'
 import SearchBar from './components/SearchBar'
 import { SearchParams } from './components/SearchBar'
 import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
@@ -167,6 +167,7 @@ const App: React.FC = () => {
     
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
 
 
