@@ -42,7 +42,7 @@ const Upload: React.FC<Props> = ({onImageSubmit}) => {
   return (
     <div>
       <input type='file' id="fileItem" onChange={handleFileSelect}  ></input>
-      <img src={selectedFileUrl} alt=''></img>
+      { selectedFileUrl ? <img src={selectedFileUrl} alt=''/> : null }
       <button onClick={() => onImageSubmit(selectedFileUrl)}>Extract Colors</button>
     </div>
   )
