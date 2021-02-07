@@ -15,7 +15,7 @@ import { SearchResultProps } from './components/ColorMatchedSearchResult'
 import { deltaE } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
 
-import { prominent } from 'color.js'
+// import { prominent } from 'color.js'
 import splashy  from 'splashy'
 import convert from 'color-convert'
 
