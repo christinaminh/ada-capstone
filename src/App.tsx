@@ -16,6 +16,9 @@ import { deltaE } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
 
 import { prominent } from 'color.js'
+import splashy  from 'splashy'
+import convert from 'color-convert'
+
 
 
 const App: React.FC = () => {
@@ -55,7 +58,8 @@ const App: React.FC = () => {
 
     //  extractColors(imgUrl, 1)
       // .then(response => {
-    prominent(imgUrl, { amount: 2, group: 30 })
+    // prominent(imgUrl, { amount: 5, group: 40,  sample: 5 })
+    splashy(imgUrl)
       .then( response => {
         // if response is an array of color objects, set colors
         // let i = 1
@@ -68,7 +72,12 @@ const App: React.FC = () => {
           // setColorResults(colorObject)
           // setSelectedColors(colorObject)
         // // if amount is > 1
-        let colorArray = response as Array<number[]>
+
+        const colorArray = response.map( color => {
+          return convert.hex.rgb(color)
+        })
+
+        // let colorArray = response as Array<number[]>
         if(colorArray.length > 0) {
           const colorObjects: ColorProps[] = []
           let i = 1
@@ -134,11 +143,16 @@ const App: React.FC = () => {
           for( const searchResult of searchResults) {
             console.log("URL:", searchResult.imageUrl)
 
-            await prominent(searchResult.imageUrl, { amount: 2, group: 30 })
+            // await prominent(searchResult.imageUrl, { amount: 3, group: 30, sample: 1 })
+            await splashy(searchResult.imageUrl)
               .then( response => {
+
+                const colorArraySearchResults = response.map( color => {
+                  return convert.hex.rgb(color)
+                })
     
                 // response is a nested array of rgb values [[r,g,b],...]
-                let colorArraySearchResults = response as Array<number[]>
+                // let colorArraySearchResults = response as Array<number[]>
                 
                 if( typeof colorArraySearchResults === 'object') {
                   for(let searchResultRGB of colorArraySearchResults) {
@@ -149,7 +163,7 @@ const App: React.FC = () => {
             
                       console.log("color difference", colorDiff)
               
-                      if(colorDiff < 50){
+                      if(colorDiff < 30){
                         console.log('color match!')
                         console.log('search result that matched', searchResult)
                         colorMatches.push(searchResult)
