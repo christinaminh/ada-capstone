@@ -46,13 +46,12 @@ export const fetchSerpWowSearchResults = (searchParams: SearchParams) => {
       ...searchParams,
       api_key: SERPWOW_API_KEY,
       engine: "amazon",
-      amazon_domain: "amazon.com",
-
     }
   };
   console.log('INSIDE fetchSerpWowSearchResults')
 
-    return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
+    // return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
+    return axios.get(SERPWOW_API_PATH, APIParams)
     .then( response => {
       const searchResults = response.data.amazon_results
 

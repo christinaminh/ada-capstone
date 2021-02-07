@@ -140,6 +140,8 @@ const App: React.FC = () => {
           const colorMatches: SearchResultProps[] = []
         
           console.log('IN FILTER SEARCH BY COLOR')
+          
+          
           for( const searchResult of searchResults) {
             console.log("URL:", searchResult.imageUrl)
 
@@ -155,6 +157,7 @@ const App: React.FC = () => {
                 // let colorArraySearchResults = response as Array<number[]>
                 
                 if( typeof colorArraySearchResults === 'object') {
+                  colorComparisonLoop:
                   for(let searchResultRGB of colorArraySearchResults) {
 
                     console.log("RGB of search result: ", searchResultRGB)
@@ -167,7 +170,7 @@ const App: React.FC = () => {
                         console.log('color match!')
                         console.log('search result that matched', searchResult)
                         colorMatches.push(searchResult)
-                        break
+                        break colorComparisonLoop
                       }
                     }
                   }
