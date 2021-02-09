@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 // import axios from 'axios';
 import './App.css';
-import Upload from './components/Upload'
+import UploadModal from './components/UploadModal'
 // import { fetchColorProperties } from './VisionAPI'
 // import { extractColors } from './ExtractColor'
 
@@ -30,6 +30,8 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
 
   const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
+
+  const [uploadModalShow, setUploadModalShow] = React.useState(false);
 
   // Select/Deselect color from color palette
   const onClickColor = (clickedColor: ColorProps) => {
@@ -141,9 +143,7 @@ const App: React.FC = () => {
         
           console.log('IN FILTER SEARCH BY COLOR')
           
-          
           for( const searchResult of searchResults) {
-            console.log("URL:", searchResult.imageUrl)
 
             // await prominent(searchResult.imageUrl, { amount: 3, group: 30, sample: 1 })
             await splashy(searchResult.imageUrl)
@@ -159,12 +159,8 @@ const App: React.FC = () => {
                 if( typeof colorArraySearchResults === 'object') {
                   colorComparisonLoop:
                   for(let searchResultRGB of colorArraySearchResults) {
-
-                    console.log("RGB of search result: ", searchResultRGB)
                     for(let selectColor of selectedColors) {
                       const colorDiff = deltaE(searchResultRGB, selectColor.color)
-            
-                      console.log("color difference", colorDiff)
               
                       if(colorDiff < 30){
                         console.log('color match!')
@@ -192,12 +188,17 @@ const App: React.FC = () => {
   return (
     <div className='App'>
       <header className='App-header'>
+      </header>
 
     <main>
     { errorMessage ? <div>{errorMessage}</div> : null }
 
-      <Upload onImageSubmit={onImageSubmit} />
-      <ColorPalette colors={colorResults} onClickColorCallback={onClickColor} />
+      <button onClick={() => setUploadModalShow(true)}>
+          Upload
+      </button>
+
+      <UploadModal show={uploadModalShow} onHide={() => setUploadModalShow(false)} onImageSubmit={onImageSubmit} />
+      {/* <ColorPalette colors={colorResults} onClickColorCallback={onClickColor} /> */}
       <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
 
       { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
@@ -207,7 +208,7 @@ const App: React.FC = () => {
 
 
     </main>
-    </header>
+
 
     </div>
   );
