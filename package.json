@@ -22,6 +22,7 @@
     "react-axios": "^2.0.4",
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "simple-color-converter": "^2.1.13",
     "splashy": "^5.0.2",

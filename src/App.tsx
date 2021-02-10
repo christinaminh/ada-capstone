@@ -217,7 +217,7 @@ const App: React.FC = () => {
           Upload a photo
       </button>
 
-      <UploadModal show={uploadModalShow} onHide={() => setUploadModalShow(false)} onImageSubmit={onImageSubmit} />
+      <UploadModal show={uploadModalShow} onHide={() => setUploadModalShow(false)} onImageSubmit={onImageSubmit} colors={colorResults} onClickColorCallback={onClickColor}/>
       <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
 
       <SearchNavBar colors={colorResults} onClickColorCallback={onClickColor}/>
