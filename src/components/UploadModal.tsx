@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Modal, Toast } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Modal } from 'react-bootstrap'
 import UploadStatusBar from './UploadStatusBar'
 import './UploadModal.css'
 import photoIcon from '../images/photo-upload-icon.svg'
@@ -35,6 +35,12 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit}) => {
 
   const onUploadComplete = () => {
    setUploadComplete(true)
+
+   setTimeout( () => {
+     onHide()
+    }, 3000)
+
+    
   }
 
   
@@ -43,7 +49,6 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit}) => {
         // {...props}
         show={show}
         onHide={onHide}
-        onImageSubmit={onImageSubmit}
         onExited={onCloseUploadProgress}
         size="sm"
         aria-labelledby="contained-modal-title-vcenter"
@@ -59,12 +64,10 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit}) => {
           { selectedFileUrl ? 
 
           <img src={selectedFileUrl} alt='' className={uploadComplete ? 'uploaded-image': ''}/> 
-
-
             : 
             <div className='photo-upload'>
               <img src={photoIcon} alt='upload icon' className='photo-upload-icon'/>
-              <label htmlFor='fileItem'>Browse Images</label>
+              <label htmlFor='fileItem'>Browse images</label>
               <input type='file' id="fileItem" onChange={handleFileSelect} style={{display: 'none'}} title=" "/>
             </div> 
           }

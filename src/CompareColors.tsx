@@ -1,3 +1,5 @@
+const simpleColorConverter = require('simple-color-converter');
+
 export const deltaE = (rgbA: number[], rgbB: number[]) => {
   let labA = rgb2lab(rgbA);
   let labB = rgb2lab(rgbB);
@@ -30,4 +32,71 @@ export const rgb2lab = (rgb: number[]) => {
   y = (y > 0.008856) ? Math.pow(y, 1/3) : (7.787 * y) + 16/116;
   z = (z > 0.008856) ? Math.pow(z, 1/3) : (7.787 * z) + 16/116;
   return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
+}
+
+
+export const getColorName = (rgbArray: number[]) => {
+  const color = new simpleColorConverter({
+    rgb: rgbArray.toString() , 
+    to: 'ral'
+})
+  const ralValue = color.color.ral
+  const ralName = color.color.name
+  console.log(ralValue)
+  console.log(ralName)
+
+  let colorName: string = ''
+
+  switch(true) {
+    case ralName.includes('Beige'):
+      colorName = 'beige'
+      break
+    case ralName.includes('Grey'):
+      colorName = 'grey'
+      break
+    case ralValue > 1012 && ralValue < 1016:
+      colorName = 'ivory'
+      break
+    case ralValue > 3013 && ralValue < 3020:
+      colorName = 'pink'
+      break  
+    case ralValue < 2000:
+      colorName = 'yellow'
+      break
+    case ralValue < 3000:
+      colorName = 'orange'
+      break
+    case ralValue < 4000:
+      colorName = 'red'
+      break
+    case ralValue < 5000:
+      colorName = 'purple'
+      break
+    case ralValue < 6000:
+      colorName = 'blue'
+      break
+    case ralValue < 7000:
+      colorName = 'green'
+      break
+    case ralValue < 8000 || ralName.includes('Grey') || ralName.includes('Aluminium') || ralName.includes('Papyrus'):
+      colorName = 'grey'
+      break
+    case ralValue < 9000:
+      colorName = 'brown'
+      break
+    case ralValue < 10000 && ralName.includes('White'):
+      colorName = 'white'
+      break
+    case ralValue < 10000 && ralName.includes('Black'):
+      colorName = 'black'
+      break
+    case ralValue < 10000 && ralName.includes('Cream'):
+      colorName = 'cream'
+      break  
+    default:
+      console.log('default switch') 
+  }
+
+  console.log(colorName)
+  return colorName
 }

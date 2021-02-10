@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import ProgressBar from './ProgressBar'
 import deleteButton from '../images/delete.svg'
 import uploadCompleteIcon from '../images/upload-complete.svg'
-import { Modal } from 'react-bootstrap'
 
 interface StatusBarProps {
   onCloseUploadProgress: () => void
@@ -28,7 +27,7 @@ const UploadStatusBar: React.FC<StatusBarProps> = ({onCloseUploadProgress, onUpl
       })
     }, 1000)
 
-
+    
   }, [])
 
   // const showUploading = () => {

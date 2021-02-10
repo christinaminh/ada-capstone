@@ -4,7 +4,8 @@
  export interface ColorProps {
   id: number,
   color: number[],
-  selected?: boolean
+  selected?: boolean,
+  name: string
  }
 
  interface ColorCallback {
@@ -27,7 +28,8 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
       id: props.id,
       color: props.color,
       // score: props.score,
-      selected: !selected
+      selected: !selected,
+      name: props.name
     }
 
     setSelected(color.selected)
@@ -38,7 +40,6 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
 
   return(
     <div className={selected ? 'selected color-item': 'color-item'} style={colorItemStyle} onClick={handleClickedColor}>
-      
     </div>
   )
 }

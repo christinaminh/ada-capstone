@@ -5,14 +5,16 @@ import UploadModal from './components/UploadModal'
 // import { fetchColorProperties } from './VisionAPI'
 // import { extractColors } from './ExtractColor'
 
-import ColorPalette from './components/ColorPalette';
+// import ColorPalette from './components/ColorPalette';
+import SearchNavBar from './components/SearchNavBar'
+
 import { ColorProps } from './components/Color'
 // import { fetchSearchResults } from './SerpAPI'
 import SearchBar from './components/SearchBar'
-import { SearchParams } from './components/SearchBar'
+// import { SearchParams } from './components/SearchBar'
 import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
 import { SearchResultProps } from './components/ColorMatchedSearchResult'
-import { deltaE } from './CompareColors'
+import { deltaE, getColorName } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
 
 // import { prominent } from 'color.js'
@@ -63,18 +65,6 @@ const App: React.FC = () => {
     // prominent(imgUrl, { amount: 5, group: 40,  sample: 5 })
     splashy(imgUrl)
       .then( response => {
-        // if response is an array of color objects, set colors
-        // let i = 1
-        // // if amount is 1
-        //   const colorObject: ColorProps[] = [{
-        //     color: response,
-        //     id: i
-        //   }]
-        
-          // setColorResults(colorObject)
-          // setSelectedColors(colorObject)
-        // // if amount is > 1
-
         const colorArray = response.map( color => {
           return convert.hex.rgb(color)
         })
@@ -87,7 +77,8 @@ const App: React.FC = () => {
           for( let color of colorArray ){
             colorObjects.push({
               color: color,
-              id: i
+              id: i,
+              name: getColorName(color)
             })
 
             i += 1
@@ -105,12 +96,23 @@ const App: React.FC = () => {
       })
   }
 
+
   
-  const onSearchSubmit = (searchParams: SearchParams) => {
+  // const onSearchSubmit = (searchParams: SearchParams) => {
+  const onSearchSubmit = async (searchQuery: string) => {
+
     if(selectedColors.length === 0){
       setErrorMessage('Select colors to search')
     } else {
-      fetchSerpWowSearchResults(searchParams)
+      let colorNameSet: any = new Set()
+      for( const color of selectedColors) {
+        colorNameSet.add(color.name)
+      }
+
+      console.log("~~~~~~~COLOR SET", colorNameSet)
+
+      for(let colorName of colorNameSet) {
+        await fetchSerpWowSearchResults(searchQuery, colorName)
         .then( response => {
           // if response is an error string, set error message
           if(typeof response === 'string'){
@@ -125,12 +127,29 @@ const App: React.FC = () => {
             setSearchResults(response)
           }
         })
+      }
+
+
+      // fetchSerpWowSearchResults(searchParams)
+      //   .then( response => {
+      //     // if response is an error string, set error message
+      //     if(typeof response === 'string'){
+      //       setErrorMessage(response)
+
+      //       setTimeout(() => {
+      //         setErrorMessage(null)
+      //       }, 6000)
+
+      //     // if response is an array of search results, set searchResults
+      //     } else if( typeof response === 'object') {
+      //       setSearchResults(response)
+      //     }
+      //   })
     }
   }
 
 
   const initialRender = useRef(true)
-
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
@@ -162,7 +181,7 @@ const App: React.FC = () => {
                     for(let selectColor of selectedColors) {
                       const colorDiff = deltaE(searchResultRGB, selectColor.color)
               
-                      if(colorDiff < 30){
+                      if(colorDiff < 10){
                         console.log('color match!')
                         console.log('search result that matched', searchResult)
                         colorMatches.push(searchResult)
@@ -188,23 +207,24 @@ const App: React.FC = () => {
   return (
     <div className='App'>
       <header className='App-header'>
+
       </header>
 
     <main>
-    { errorMessage ? <div>{errorMessage}</div> : null }
+      { errorMessage ? <div>{errorMessage}</div> : null }
 
-      <button onClick={() => setUploadModalShow(true)}>
-          Upload
+      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+          Upload a photo
       </button>
 
       <UploadModal show={uploadModalShow} onHide={() => setUploadModalShow(false)} onImageSubmit={onImageSubmit} />
-      {/* <ColorPalette colors={colorResults} onClickColorCallback={onClickColor} /> */}
       <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
+
+      <SearchNavBar colors={colorResults} onClickColorCallback={onClickColor}/>
 
       { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
         <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl}/>
       )))}
-
 
 
     </main>

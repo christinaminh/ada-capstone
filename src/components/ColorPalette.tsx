@@ -3,16 +3,16 @@ import { ColorProps } from './Color'
 import Color from './Color'
 
 
-interface Props {
+export interface ColorPaletteProps {
   colors: ColorProps[],
   onClickColorCallback: (color: ColorProps) => void
 }
 
-const ColorPalette: React.FC<Props> = ({colors, onClickColorCallback}) => {
+const ColorPalette: React.FC<ColorPaletteProps> = ({colors, onClickColorCallback}) => {
   return(
     <div>
       {colors.map( (color, i) => (
-        <Color key={i} color={color.color} id={color.id} onClickColorCallback={onClickColorCallback}/>
+        <Color key={i} color={color.color} id={color.id} onClickColorCallback={onClickColorCallback} name={color.name} />
       ))}
     </div>
   )

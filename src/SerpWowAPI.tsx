@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { SearchParams } from './components/SearchBar'
+// import { SearchParams } from './components/SearchBar'
 
 const SERPWOW_API_KEY = process.env.REACT_APP_SERPWOW_API_KEY
 const SERPWOW_API_PATH = `https://api.serpwow.com/live/search?`
@@ -40,15 +40,16 @@ interface SearchResponse {
   }
 }
 
-export const fetchSerpWowSearchResults = (searchParams: SearchParams) => {
+export const fetchSerpWowSearchResults = async (searchQuery: string, colorName: string) => {
   const APIParams = {
     params: {
-      ...searchParams,
+      q: `${colorName} ${searchQuery}`,
       api_key: SERPWOW_API_KEY,
       engine: "amazon",
+      // page: 1
     }
   };
-  console.log('INSIDE fetchSerpWowSearchResults')
+  console.log(`INSIDE fetchSerpWowSearchResults searching for ${colorName} ${searchQuery} `)
 
     // return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
     return axios.get(SERPWOW_API_PATH, APIParams)
@@ -61,7 +62,7 @@ export const fetchSerpWowSearchResults = (searchParams: SearchParams) => {
         imageUrl: searchObject.image
       } ))
 
-      console.log(parsedSearchResults)
+      // console.log(parsedSearchResults)
       return parsedSearchResults
 
     })
