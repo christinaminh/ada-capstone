@@ -5,17 +5,18 @@ import './UploadModal.css'
 import photoIcon from '../images/photo-upload-icon.svg'
 import button from '../images/button.svg'
 import ColorPalette from './ColorPalette';
+import { useHistory } from "react-router-dom";
 
 import { ColorPaletteProps } from './ColorPalette'
 
 interface Props extends ColorPaletteProps{
   show: boolean,
   onHide: () => void,
-  onImageSubmit: (imageUrl: string) => void,
+  onImageSubmitCallback: (imageUrl: string) => void,
+  onSearchSubmitCallback: (searchQuery: string) => void,
 }
 
-
-const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit, colors, onClickColorCallback}) => {
+const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback, onSearchSubmitCallback, colors, onClickColorCallback}) => {
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('')
   const [showProgress, setShowProgress] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
@@ -27,7 +28,7 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit, colors, onCl
     const fileUrl = URL.createObjectURL(file)
     setSelectedFileUrl(fileUrl)
 
-    onImageSubmit(fileUrl)
+    onImageSubmitCallback(fileUrl)
     setShowProgress(true)
   }
 
@@ -40,12 +41,36 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit, colors, onCl
   const onUploadComplete = () => {
    setUploadComplete(true)
 
-  //  setTimeout( () => {
-  //    onHide()
-  //   }, 3000)
-    
+   setTimeout( () => {
+    //  onHide()
+    setShowProgress(false)
+    }, 2000)
   }
 
+  const history = useHistory()
+
+  const onQuerySubmit = () => {
+    onSearchSubmitCallback('home furniture')
+    history.push('/search')
+    onHide()
+  }
+
+  const modalFooter = () => {
+    if(showProgress) {
+      return <UploadStatusBar onCloseUploadProgress={onCloseUploadProgress} onUploadComplete={onUploadComplete}/>
+    } else if (!showProgress && !uploadComplete) {
+      return <div className='progress-bar-placeholder'></div>
+    } else if (!showProgress && uploadComplete) {
+      return (
+        <div>
+          Click to deselect colors
+          <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} />
+          <button onClick={onQuerySubmit}>Furnie me up!</button>
+        </div>
+
+      )
+    }
+  }
   
   return (
       <Modal
@@ -63,7 +88,6 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit, colors, onCl
         <img src={button} alt='button' className='button' onClick={onHide}/>
 
         <Modal.Body className={ uploadComplete && selectedFileUrl ? 'image-uploaded' : 'browser' }>
-        { uploadComplete ? <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} /> : null}
 
           { selectedFileUrl ? 
 
@@ -80,8 +104,10 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmit, colors, onCl
         
 
         <div className='progress-container'>
-          
-          { showProgress ?  <UploadStatusBar onCloseUploadProgress={onCloseUploadProgress} onUploadComplete={onUploadComplete}/> : <div className='progress-bar-placeholder'></div>}
+          {modalFooter()}
+          {/* { showProgress ?  <UploadStatusBar onCloseUploadProgress={onCloseUploadProgress} onUploadComplete={onUploadComplete}/> : <div className='progress-bar-placeholder'></div>}
+          { uploadComplete && !showProgress ? <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} /> : null} */}
+
         </div>
 
 

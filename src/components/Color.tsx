@@ -39,8 +39,15 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
 
 
   return(
-    <div className={selected ? 'selected color-item': 'color-item'} style={colorItemStyle} onClick={handleClickedColor}>
-    </div>
+      <div className={selected ? 'selected color-item': 'cross cross2 color-item '} style={colorItemStyle} onClick={handleClickedColor}>
+      {/* <div className="cross cross2 color-item"></div> */}
+
+      
+      </div>
+
+      
+
+
   )
 }
 

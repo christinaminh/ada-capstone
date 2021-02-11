@@ -48,6 +48,7 @@ const UploadStatusBar: React.FC<StatusBarProps> = ({onCloseUploadProgress, onUpl
   //   setShowProgress(false)
   // }
   
+    
 
   return(
     <div className='progress-bar-container'>
@@ -57,9 +58,9 @@ const UploadStatusBar: React.FC<StatusBarProps> = ({onCloseUploadProgress, onUpl
           Uploading
           <img src={deleteButton} alt='close' className='upload-icon' onClick={() => {onCloseUploadProgress()}}/>
         </div>
-
         <ProgressBar value={progressValue}/>
       </div> 
+
       : <div className='upload-bar-header'>
           Complete
           <img src={uploadCompleteIcon} alt='complete icon' className='upload-icon'/>

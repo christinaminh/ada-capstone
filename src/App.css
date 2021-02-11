@@ -37,6 +37,12 @@
   }
 }
 
+nav ul, nav {
+  list-style-type: none;
+  display: flex;
+}
+
+
 
 img {
   height: 100px;

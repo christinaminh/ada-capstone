@@ -5,11 +5,28 @@
   margin: 1rem;
   border-radius: 20%;
   /* opacity: 50%; */
-  border: white
-
 }
+
+.cross {
+  position: relative;
+  border: solid red 5px;
+}
+
+.cross::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+}
+
+.cross2::after {
+  background:
+    linear-gradient(to top left, transparent 45%, rgb(255,0,0) 46%, rgb(255,0,0) 54%, transparent 55%),
+    linear-gradient(to top right, transparent 45%, rgb(255,0,0) 46%, rgb(255,0,0) 54%, transparent 55%);
+  /* opacity: 0.35; */
+}
+
 
 .selected {
   border: solid black 5px;
-  opacity: 100%
 }
