@@ -11,9 +11,9 @@ import { InputGroup, FormControl, Button } from 'react-bootstrap'
 // }
 
   
-  interface SearchBarProps {
-    onSearchSubmitCallback: (searchQuery: string) => void
-  }
+export interface SearchBarProps {
+  onSearchSubmitCallback: (searchQuery: string) => void
+}
 
 const SearchBar: React.FC<SearchBarProps> = ({onSearchSubmitCallback}) => {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -38,10 +38,11 @@ const SearchBar: React.FC<SearchBarProps> = ({onSearchSubmitCallback}) => {
           placeholder="Search"
           aria-label="Search"
           aria-describedby="basic-addon2"
+          className='search-bar'
         />
 
         <InputGroup.Append>
-          <Button onClick={() => onSearchSubmitCallback(searchQuery)} variant="outline-secondary">FIND MATCHES</Button>
+          <Button onClick={() => onSearchSubmitCallback(searchQuery)} className='search-button'>FIND MATCHES</Button>
         </InputGroup.Append>
       </InputGroup>
     </div>

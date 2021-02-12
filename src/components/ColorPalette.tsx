@@ -1,6 +1,8 @@
 import React from 'react';
 import { ColorProps } from './Color'
 import Color from './Color'
+import './Color.css'
+
 
 
 export interface ColorPaletteProps {
@@ -10,7 +12,7 @@ export interface ColorPaletteProps {
 
 const ColorPalette: React.FC<ColorPaletteProps> = ({colors, onClickColorCallback}) => {
   return(
-    <div>
+    <div className='search-color-palette'>
       {colors.map( (color, i) => (
         <Color key={i} color={color.color} id={color.id} onClickColorCallback={onClickColorCallback} name={color.name} />
       ))}

@@ -52,10 +52,10 @@ img {
 .upload-button {
   height: 26px;
 
-  left: 0px;
+  /* left: 0px;
   right: 0.13px;
   top: 0px;
-  bottom: 0px;
+  bottom: 0px; */
 
   background: #264653;
   border-radius: 2px;

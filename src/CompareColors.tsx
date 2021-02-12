@@ -93,10 +93,7 @@ export const getColorName = (rgbArray: number[]) => {
     case ralValue < 10000 && ralName.includes('Cream'):
       colorName = 'cream'
       break  
-    default:
-      console.log('default switch') 
   }
 
-  console.log(colorName)
   return colorName
 }

@@ -15,7 +15,7 @@ import UploadModal from './components/UploadModal'
 // import { extractColors } from './ExtractColor'
 
 // import ColorPalette from './components/ColorPalette';
-import SearchNavBar from './components/SearchNavBar'
+import SearchNavBar from './components/SearchFilterBar'
 
 import { ColorProps } from './components/Color'
 // import { fetchSearchResults } from './SerpAPI'
@@ -29,6 +29,9 @@ import { fetchSerpWowSearchResults } from './SerpWowAPI'
 // import { prominent } from 'color.js'
 import splashy  from 'splashy'
 import convert from 'color-convert'
+import InspirationBar from './components/InspirationBar';
+import SearchPageLayout from './components/SearchPageLayout'
+import Header from './components/Header'
 
 
 
@@ -64,7 +67,8 @@ const App: React.FC = () => {
 
 
   // After uploading image, call API to determine dominant colors in image
-  const onImageSubmit = (imgUrl: string) => {    
+  const onImageSubmit = (imgUrl: string) => {   
+    setReferenceImage(imgUrl) 
     setColorResults([])
     setSelectedColors([])
     setSearchResults([])
@@ -110,8 +114,8 @@ const App: React.FC = () => {
   
   // const onSearchSubmit = (searchParams: SearchParams) => {
   const onSearchSubmit = async (searchQuery: string) => {
-
-    setSearchLoading(true)
+    console.log('IN SEARCH SUBMIT')
+    // setSearchLoading(true)
 
     if(selectedColors.length === 0){
       setErrorMessage('Select colors to search')
@@ -126,12 +130,16 @@ const App: React.FC = () => {
       let newSearchResults = [...searchResults]
 
       for(let colorName of colorNameSet) {
+
+        console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
         await fetchSerpWowSearchResults(searchQuery, colorName)
         // eslint-disable-next-line no-loop-func
         .then( response => {
           // if response is an array of search results, set searchResults
           if( typeof response === 'object') {
             newSearchResults = newSearchResults.concat(response)
+
+            console.log('I GOT SEARCH RESULTS!')
 
             // setSearchResults(newSearchResults)
             
@@ -142,6 +150,9 @@ const App: React.FC = () => {
             setTimeout(() => {
               setErrorMessage(null)
             }, 6000)
+
+            console.log('NO SEARCH RESULTS! I GOT AN ERROR')
+
           }
         })
       }
@@ -209,35 +220,6 @@ const App: React.FC = () => {
     <Router>
       <div className='App'>
 
-      
-      <header className='App-header'>
-        <nav>
-          <ul>
-            <li>
-              <NavLink to='/'>Home</NavLink>
-            </li>
-            <li>
-              <NavLink to='/'>About</NavLink>
-            </li>
-            <li>
-              <NavLink to='/'>Contact</NavLink>
-            </li>
-            <li>
-              <NavLink to='/'>Explore</NavLink>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
-<Switch>
-  <Route exact path='/'>
-
-      { errorMessage ? <div>{errorMessage}</div> : null }
-
-      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
-          Upload a photo
-      </button>
-
       <UploadModal 
         show={uploadModalShow} onHide={() => setUploadModalShow(false)} 
         onImageSubmitCallback={onImageSubmit} 
@@ -246,34 +228,52 @@ const App: React.FC = () => {
         onSearchSubmitCallback={onSearchSubmit}
       />
 
-      {/* {searchLoading ? { Redirect to='/search'} } */}
-
-
-
-
-  </Route>
-
+<Switch>
   <Route exact path='/search'>
-    {/* { searchLoading ?  */}
-        <div>    
-          <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
+   { errorMessage ? <div>{errorMessage}</div> : null }
 
-          <SearchNavBar colors={colorResults} onClickColorCallback={onClickColor}/>
-      
-          { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-            <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl}/>
-          )))}
-        </div>
-      {/* :
-        <Redirect
-     } */}
 
+      <SearchPageLayout
+        image={referenceImage} 
+        colors={colorResults}
+        // TODO selectedColors
+        onClickColorCallback={onClickColor}
+        onSearchSubmitCallback={onSearchSubmit}
+        colorMatchedResults={colorMatchedResults}
+        setUploadModalShow={() => setUploadModalShow(true)}
+      />
+
+
+
+          {/* <div className='search-page'>
+            <div className='inspiration-bar'>
+              { referenceImage ? <InspirationBar image={referenceImage} colors={colorResults} onClickColorCallback={onClickColor}/> : null }
+            </div>
+
+            <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
+
+            <SearchNavBar colors={colorResults} onClickColorCallback={onClickColor}/>
+        
+            { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+              <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl}/>
+            )))}
+          </div> */}
+        {/* :
+          <Redirect
+      } */}
+    </Route>
+
+  <Route path='/'>
+    <Header />
+
+      { errorMessage ? <div>{errorMessage}</div> : null }
+
+      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+          Upload a photo
+      </button>
 
 
   </Route>
-
-
-
 
   <Route render={
     () => <h1>Not Found</h1>

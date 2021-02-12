@@ -1,15 +1,23 @@
+.search-color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  
+}
+
 .color-item {
   width: 50px;
   height: 50px;
   display: inline-block;
-  margin: 1rem;
+  margin: 0.5rem;
   border-radius: 20%;
   /* opacity: 50%; */
 }
 
 .cross {
   position: relative;
-  border: solid red 5px;
+  border: solid red 3px;
 }
 
 .cross::after {
@@ -28,5 +36,6 @@
 
 
 .selected {
-  border: solid black 5px;
+  border: solid white 3px;
 }
+
