@@ -3,9 +3,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  NavLink,
-  Link,
-  Redirect
+  // NavLink,
+  // Link,
+  // Redirect
 } from "react-router-dom";
 
 // import axios from 'axios';
@@ -15,13 +15,13 @@ import UploadModal from './components/UploadModal'
 // import { extractColors } from './ExtractColor'
 
 // import ColorPalette from './components/ColorPalette';
-import SearchNavBar from './components/SearchFilterBar'
+// import SearchNavBar from './components/SearchFilterBar'
 
 import { ColorProps } from './components/Color'
 // import { fetchSearchResults } from './SerpAPI'
-import SearchBar from './components/SearchBar'
+// import SearchBar from './components/SearchBar'
 // import { SearchParams } from './components/SearchBar'
-import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
+// import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
 import { SearchResultProps } from './components/ColorMatchedSearchResult'
 import { deltaE, getColorName } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
@@ -29,7 +29,7 @@ import { fetchSerpWowSearchResults } from './SerpWowAPI'
 // import { prominent } from 'color.js'
 import splashy  from 'splashy'
 import convert from 'color-convert'
-import InspirationBar from './components/InspirationBar';
+// import InspirationBar from './components/InspirationBar';
 import SearchPageLayout from './components/SearchPageLayout'
 import Header from './components/Header'
 
@@ -43,7 +43,7 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
   const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
   const [uploadModalShow, setUploadModalShow] = useState(false);
-  const [searchLoading, setSearchLoading] = useState(false)
+  // const [searchLoading, setSearchLoading] = useState(false)
   const [referenceImage, setReferenceImage] = useState<string>('')
 
 
