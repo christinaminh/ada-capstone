@@ -77,6 +77,7 @@ const App: React.FC = () => {
     setSelectedColors([])
     setSearchResults([])
     setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
+    setSelectedColorMatchedResults([])
 
     //  extractColors(imgUrl, 1)
       // .then(response => {
@@ -240,7 +241,7 @@ const App: React.FC = () => {
       setSelectedColorMatchedResults(selectedMatchedResults)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedColors])
+  }, [selectedColors, colorMatchedResults])
 
 
 
