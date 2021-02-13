@@ -15,14 +15,14 @@ import UploadModal from './components/UploadModal'
 // import { extractColors } from './ExtractColor'
 
 // import ColorPalette from './components/ColorPalette';
-// import SearchNavBar from './components/SearchFilterBar'
+import SearchFilterBar from './components/SearchFilterBar'
 
 import { ColorProps } from './components/Color'
 // import { fetchSearchResults } from './SerpAPI'
 // import SearchBar from './components/SearchBar'
 // import { SearchParams } from './components/SearchBar'
-// import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
-import { SearchResultProps } from './components/ColorMatchedSearchResult'
+import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
+import { SearchResultProps, ColorMatchedProps } from './components/ColorMatchedSearchResult'
 import { deltaE, getColorName } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
 
@@ -30,9 +30,9 @@ import { fetchSerpWowSearchResults } from './SerpWowAPI'
 import splashy  from 'splashy'
 import convert from 'color-convert'
 // import InspirationBar from './components/InspirationBar';
-import SearchPageLayout from './components/SearchPageLayout'
+// import SearchPageLayout from './components/SearchPageLayout'
 import Header from './components/Header'
-
+import './components/SearchPageLayout.css'
 
 
 const App: React.FC = () => {
@@ -41,9 +41,13 @@ const App: React.FC = () => {
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
   const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
-  const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
+  // const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
+    // const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({})
+  const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
+  const [selectedColorMatchedResults, setSelectedColorMatchedResults] = useState<SearchResultProps[]>([])
+
   const [uploadModalShow, setUploadModalShow] = useState(false);
-  // const [searchLoading, setSearchLoading] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(false)
   const [referenceImage, setReferenceImage] = useState<string>('')
 
 
@@ -72,7 +76,7 @@ const App: React.FC = () => {
     setColorResults([])
     setSelectedColors([])
     setSearchResults([])
-    setColorMatchedResults([])
+    setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
 
     //  extractColors(imgUrl, 1)
       // .then(response => {
@@ -100,6 +104,10 @@ const App: React.FC = () => {
 
           setColorResults(colorObjects)
           setSelectedColors(colorObjects)
+          console.log('SET SELECTED COLORS')
+
+          onSearchSubmit('home furniture', colorObjects)
+
         } else {
           setErrorMessage("Could not read image")
 
@@ -113,9 +121,9 @@ const App: React.FC = () => {
 
   
   // const onSearchSubmit = (searchParams: SearchParams) => {
-  const onSearchSubmit = async (searchQuery: string) => {
-    console.log('IN SEARCH SUBMIT')
-    // setSearchLoading(true)
+  const onSearchSubmit = async (searchQuery: string, selectedColors: ColorProps[]) => {
+    console.log('IN SEARCH SUBMIT with colors', selectedColors)
+    setSearchLoading(true)
 
     if(selectedColors.length === 0){
       setErrorMessage('Select colors to search')
@@ -141,7 +149,7 @@ const App: React.FC = () => {
 
             console.log('I GOT SEARCH RESULTS!')
 
-            // setSearchResults(newSearchResults)
+            setSearchResults(newSearchResults)
             
           // if response is an error string, set error message
           } else if(typeof response === 'string'){
@@ -157,7 +165,7 @@ const App: React.FC = () => {
         })
       }
 
-      setSearchResults(newSearchResults) 
+      // setSearchResults(newSearchResults) 
     }
   }
 
@@ -166,12 +174,12 @@ const App: React.FC = () => {
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
-
     } else {
 
       if(searchResults.length > 0  && selectedColors.length > 0 ) {
         const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
-          const newColorMatches: SearchResultProps[] = [...colorMatchedResults]
+          // const newColorMatches: SearchResultProps[] = [...colorMatchedResults]
+          const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
         
           console.log('IN FILTER SEARCH BY COLOR')
           
@@ -196,24 +204,44 @@ const App: React.FC = () => {
               
                       if(colorDiff < 10){
                         console.log('color match!')
-                        console.log('search result that matched', searchResult)
-                        newColorMatches.push(searchResult)
+                          newColorMatches[`${selectColor.id}`].push(searchResult)
+
+                        // newColorMatches.push(searchResult)
                         break colorComparisonLoop
                       }
                     }
                   }
                 }
+
+                setColorMatchedResults(newColorMatches)
               })
             }
-          setColorMatchedResults(newColorMatches)
+          // setColorMatchedResults(newColorMatches)
         }
     
         filterSearchByColor(selectedColors, searchResults)
+        setSearchLoading(false)
     
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
+
+  
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false
+    } else {
+      let selectedMatchedResults: SearchResultProps[] = []
+      for(const color of selectedColors) {
+        selectedMatchedResults = selectedMatchedResults.concat(colorMatchedResults[color.id])
+      }
+
+      setSelectedColorMatchedResults(selectedMatchedResults)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedColors])
+
 
 
   return (
@@ -225,7 +253,7 @@ const App: React.FC = () => {
         onImageSubmitCallback={onImageSubmit} 
         colors={colorResults} 
         onClickColorCallback={onClickColor} 
-        onSearchSubmitCallback={onSearchSubmit}
+        // onSearchSubmitCallback={onSearchSubmit}
       />
 
 <Switch>
@@ -233,31 +261,52 @@ const App: React.FC = () => {
    { errorMessage ? <div>{errorMessage}</div> : null }
 
 
-      <SearchPageLayout
+      {/* <SearchPageLayout
         image={referenceImage} 
         colors={colorResults}
-        // TODO selectedColors
+        selectedColors={selecte}
         onClickColorCallback={onClickColor}
         onSearchSubmitCallback={onSearchSubmit}
         colorMatchedResults={colorMatchedResults}
         setUploadModalShow={() => setUploadModalShow(true)}
-      />
+      /> */}
+
+    <div className='search-page'>
+      <div className='search-header'>
+      <Header />
+      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+        Upload a photo
+      </button>
+    </div>
 
 
+    <SearchFilterBar 
+      colors={colorResults}
+      // selected={selectedColors}
+      onClickColorCallback={onClickColor}         
+      image={referenceImage} 
+    />
 
-          {/* <div className='search-page'>
-            <div className='inspiration-bar'>
-              { referenceImage ? <InspirationBar image={referenceImage} colors={colorResults} onClickColorCallback={onClickColor}/> : null }
-            </div>
 
-            <SearchBar onSearchSubmitCallback={onSearchSubmit}/>
+    <div className='search-results-container'>
+      {/* { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
+        )))} */}
+        { (selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
+        )))}
 
-            <SearchNavBar colors={colorResults} onClickColorCallback={onClickColor}/>
+
+    </div>
         
-            { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-              <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl}/>
-            )))}
-          </div> */}
+
+        
+    {/* <Footer /> */}
+
+
+
+  </div>
+
         {/* :
           <Redirect
       } */}

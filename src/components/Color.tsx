@@ -1,5 +1,6 @@
  import React, { useState } from 'react';
  import './Color.css'
+ import checkmark from '../images/checkmark.svg'
 
  export interface ColorProps {
   id: number,
@@ -39,11 +40,13 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
 
 
   return(
-      <div className={selected ? 'selected color-item': 'cross cross2 color-item '} style={colorItemStyle} onClick={handleClickedColor}>
-      {/* <div className="cross cross2 color-item"></div> */}
 
-      
+      <div className={selected ? 'selected color-item': 'color-item '} style={colorItemStyle} onClick={handleClickedColor}>
+        <img src={checkmark} alt='select color' className={selected ? 'checked' : 'unchecked'}/>
+
       </div>
+
+
 
       
 

@@ -13,10 +13,10 @@ interface Props extends ColorPaletteProps{
   show: boolean,
   onHide: () => void,
   onImageSubmitCallback: (imageUrl: string) => void,
-  onSearchSubmitCallback: (searchQuery: string) => void,
+  // onSearchSubmitCallback: (searchQuery: string) => void,
 }
 
-const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback, onSearchSubmitCallback, colors, onClickColorCallback}) => {
+const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => {
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('')
   const [showProgress, setShowProgress] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
@@ -38,39 +38,45 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback, onSe
     setUploadComplete(false)
   }
 
-  const onUploadComplete = () => {
-   setUploadComplete(true)
+  const history = useHistory()
 
-   setTimeout( () => {
-    //  onHide()
-    setShowProgress(false)
+  const onUploadComplete = () => {
+    setUploadComplete(true)
+
+    setTimeout( () => {
+    // onSearchSubmitCallback('home furniture')
+
+    history.push('/search')
+    onHide()
+    // setShowProgress(false)
     }, 2000)
   }
 
-  const history = useHistory()
+  // const history = useHistory()
 
-  const onQuerySubmit = () => {
-    onSearchSubmitCallback('home furniture')
-    history.push('/search')
-    onHide()
-  }
+  // const onQuerySubmit = () => {
+  //   history.push('/search')
+  //   onSearchSubmitCallback('home furniture')
+  //   onHide()
+  // }
 
   const modalFooter = () => {
     if(showProgress) {
       return <UploadStatusBar onCloseUploadProgress={onCloseUploadProgress} onUploadComplete={onUploadComplete}/>
     } else if (!showProgress && !uploadComplete) {
       return <div className='progress-bar-placeholder'></div>
-    } else if (!showProgress && uploadComplete) {
-      return (
-        <div>
-          Click to deselect colors
-          <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} />
-          <button onClick={onQuerySubmit}>Furnie me up!</button>
-        </div>
+    } 
+    // else if (!showProgress && uploadComplete) {
+    //   return (
+    //     <div>
+    //       Click to deselect colors
+    //       <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} />
+    //       <button onClick={onQuerySubmit}>Furnie me up!</button>
+    //     </div>
 
-      )
+    //   )
     }
-  }
+  // }
   
   return (
       <Modal

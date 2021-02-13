@@ -2,16 +2,19 @@ import React from 'react'
 import SearchFilterBar from './SearchFilterBar'
 import { ColorPaletteProps } from './ColorPalette'
 import { InspirationBarProps } from './InspirationBar';
-import SearchBar from './SearchBar'
+// import SearchBar from './SearchBar'
 import { SearchBarProps } from './SearchBar'
 import { SearchResultProps } from './ColorMatchedSearchResult'
 import ColorMatchedSearchResult from './ColorMatchedSearchResult';
 import './SearchPageLayout.css'
 import Header from './Header'
+import { ColorProps } from './Color'
+
 
 interface SearchPageProps extends InspirationBarProps, SearchBarProps, ColorPaletteProps{
   colorMatchedResults: SearchResultProps[]
   setUploadModalShow: () => void
+  selectedColors: ColorProps[]
 }
 
 
@@ -36,7 +39,7 @@ return (
     />
 
 
-    <SearchBar onSearchSubmitCallback={onSearchSubmitCallback}/>
+    {/* <SearchBar onSearchSubmitCallback={onSearchSubmitCallback}/> */}
 
 
     <div className='search-results-container'>

@@ -7,6 +7,15 @@ export interface SearchResultProps {
   price: number
 }
 
+export interface ColorMatchedProps {
+  [key: string]: SearchResultProps[]
+    // '1'?: SearchResultProps[]
+    // '2'?: SearchResultProps[]
+    // '3'?: SearchResultProps[]
+    // '4'?: SearchResultProps[]
+    // '5'?: SearchResultProps[]
+    // '6'?: SearchResultProps[]
+}
 
 const SearchResult: React.FC<SearchResultProps> = ({title, imageUrl, price, link}) => {
   return(
