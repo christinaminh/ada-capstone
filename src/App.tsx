@@ -8,31 +8,20 @@ import {
   // Redirect
 } from "react-router-dom";
 
-// import axios from 'axios';
 import './App.css';
 import UploadModal from './components/UploadModal'
-// import { fetchColorProperties } from './VisionAPI'
-// import { extractColors } from './ExtractColor'
-
-// import ColorPalette from './components/ColorPalette';
 import SearchFilterBar from './components/SearchFilterBar'
-
 import { ColorProps } from './components/Color'
-// import { fetchSearchResults } from './SerpAPI'
-// import SearchBar from './components/SearchBar'
-// import { SearchParams } from './components/SearchBar'
 import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
 import { SearchResultProps, ColorMatchedProps } from './components/ColorMatchedSearchResult'
 import { deltaE, getColorName } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
-
-// import { prominent } from 'color.js'
 import splashy  from 'splashy'
 import convert from 'color-convert'
-// import InspirationBar from './components/InspirationBar';
-// import SearchPageLayout from './components/SearchPageLayout'
 import Header from './components/Header'
 import './components/SearchPageLayout.css'
+
+import { Circle } from 'styled-spinkit'
 
 
 const App: React.FC = () => {
@@ -71,14 +60,14 @@ const App: React.FC = () => {
 
 
   // After uploading image, call API to determine dominant colors in image
-  const onImageSubmit = (imgUrl: string) => {   
+  const onImageSubmit = (imgUrl: string) => {
     setReferenceImage(imgUrl) 
     setColorResults([])
     setSelectedColors([])
     setSearchResults([])
     setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
     setSelectedColorMatchedResults([])
-
+    
     //  extractColors(imgUrl, 1)
       // .then(response => {
     // prominent(imgUrl, { amount: 5, group: 40,  sample: 5 })
@@ -107,6 +96,8 @@ const App: React.FC = () => {
           setSelectedColors(colorObjects)
           console.log('SET SELECTED COLORS')
 
+
+          setSearchLoading(true)
           onSearchSubmit('home furniture', colorObjects)
 
         } else {
@@ -123,8 +114,9 @@ const App: React.FC = () => {
   
   // const onSearchSubmit = (searchParams: SearchParams) => {
   const onSearchSubmit = async (searchQuery: string, selectedColors: ColorProps[]) => {
+    // setSearchLoading(true)
+
     console.log('IN SEARCH SUBMIT with colors', selectedColors)
-    setSearchLoading(true)
 
     if(selectedColors.length === 0){
       setErrorMessage('Select colors to search')
@@ -203,7 +195,7 @@ const App: React.FC = () => {
                     for(let selectColor of selectedColors) {
                       const colorDiff = deltaE(searchResultRGB, selectColor.color)
               
-                      if(colorDiff < 10){
+                      if(colorDiff < 5){
                         console.log('color match!')
                           newColorMatches[`${selectColor.id}`].push(searchResult)
 
@@ -221,7 +213,6 @@ const App: React.FC = () => {
         }
     
         filterSearchByColor(selectedColors, searchResults)
-        setSearchLoading(false)
     
       }
     }
@@ -238,6 +229,7 @@ const App: React.FC = () => {
         selectedMatchedResults = selectedMatchedResults.concat(colorMatchedResults[color.id])
       }
 
+      
       setSelectedColorMatchedResults(selectedMatchedResults)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,15 +281,21 @@ const App: React.FC = () => {
     />
 
 
-    <div className='search-results-container'>
+    <div className='search-results-container'> 
+      { searchLoading && (selectedColorMatchedResults.length === 0) ? 
+        < Circle color={'#2A9D8F'}/> 
+        :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
+        )))
+      
+      }
+
+
+
       {/* { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
           <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
         )))} */}
-        { (selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
-        )))}
-
-
+        {/* { } */}
     </div>
         
 
