@@ -4,7 +4,6 @@ import UploadStatusBar from './UploadStatusBar'
 import './UploadModal.css'
 import photoIcon from '../images/photo-upload-icon.svg'
 import button from '../images/button.svg'
-import ColorPalette from './ColorPalette';
 import { useHistory } from "react-router-dom";
 
 import { ColorPaletteProps } from './ColorPalette'
@@ -44,21 +43,12 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
     setUploadComplete(true)
 
     setTimeout( () => {
-    // onSearchSubmitCallback('home furniture')
 
     history.push('/search')
-    onHide()
-    // setShowProgress(false)
+    // onHide()
     }, 2000)
   }
 
-  // const history = useHistory()
-
-  // const onQuerySubmit = () => {
-  //   history.push('/search')
-  //   onSearchSubmitCallback('home furniture')
-  //   onHide()
-  // }
 
   const modalFooter = () => {
     if(showProgress) {
@@ -66,17 +56,9 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
     } else if (!showProgress && !uploadComplete) {
       return <div className='progress-bar-placeholder'></div>
     } 
-    // else if (!showProgress && uploadComplete) {
-    //   return (
-    //     <div>
-    //       Click to deselect colors
-    //       <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} />
-    //       <button onClick={onQuerySubmit}>Furnie me up!</button>
-    //     </div>
 
-    //   )
-    }
-  // }
+  }
+
   
   return (
       <Modal
@@ -96,12 +78,13 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
         <Modal.Body className={ uploadComplete && selectedFileUrl ? 'image-uploaded' : 'browser' }>
 
           { selectedFileUrl ? 
-
-          <img src={selectedFileUrl} alt='' className={uploadComplete ? 'uploaded-image': ''}/> 
+          <div className='uploaded-image-container'>
+            <img src={selectedFileUrl} alt='' className={uploadComplete ? 'uploaded-image': 'uploading'}/> 
+          </div>
             : 
             <div className='photo-upload'>
               <img src={photoIcon} alt='upload icon' className='photo-upload-icon'/>
-              <label htmlFor='fileItem'>Browse images</label>
+              <label htmlFor='fileItem'>Browse Your Photos</label>
               <input type='file' id="fileItem" onChange={handleFileSelect} style={{display: 'none'}} title=" "/>
             </div> 
           }

@@ -3,9 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  // NavLink,
-  // Link,
-  // Redirect
 } from "react-router-dom";
 
 import './App.css';
@@ -25,7 +22,6 @@ import { Circle } from 'styled-spinkit'
 
 
 const App: React.FC = () => {
-  // const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
@@ -251,9 +247,6 @@ const App: React.FC = () => {
 
 <Switch>
   <Route exact path='/search'>
-   { errorMessage ? <div>{errorMessage}</div> : null }
-
-
       {/* <SearchPageLayout
         image={referenceImage} 
         colors={colorResults}
@@ -266,50 +259,32 @@ const App: React.FC = () => {
 
     <div className='search-page'>
       <div className='search-header'>
-      <Header />
-      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
-        Upload a photo
-      </button>
-    </div>
+        <Header />
 
+        <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+          Upload a photo
+        </button>
 
-    <SearchFilterBar 
+        { errorMessage ? <div>{errorMessage}</div> : null }
+      </div>
+
+      <SearchFilterBar 
       colors={colorResults}
       // selected={selectedColors}
       onClickColorCallback={onClickColor}         
       image={referenceImage} 
-    />
+      />
 
-
-    <div className='search-results-container'> 
-      { searchLoading && (selectedColorMatchedResults.length === 0) ? 
-        < Circle color={'#2A9D8F'}/> 
-        :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
-        )))
-      
-      }
-
-
-
-      {/* { (colorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-          <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
-        )))} */}
-        {/* { } */}
+      <div className='search-results-container'> 
+        { searchLoading && (selectedColorMatchedResults.length === 0) ? 
+          < Circle color={'#2A9D8F'}/> 
+          :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+            <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
+          )))
+        }
+      </div>
     </div>
-        
-
-        
-    {/* <Footer /> */}
-
-
-
-  </div>
-
-        {/* :
-          <Redirect
-      } */}
-    </Route>
+  </Route>
 
   <Route path='/'>
     <Header />

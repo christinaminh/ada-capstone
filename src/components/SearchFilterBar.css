@@ -1,0 +1,38 @@
+.search-filter-bar {
+  grid-area: filter;
+  width: 299px;
+  height: 777px;
+  background-color: #264653;
+  margin-right: 50px;
+
+  display: flex;
+  flex-direction: column;
+
+}
+
+.search-filter-bar * {
+  color: white;
+  text-align: left
+}
+
+.filter-label {
+  margin-left: 28px;
+  margin-top: 28px
+}
+
+.reference-image-container {
+  height: 230px;
+  width: 230px;
+  margin-top: 68px;
+  box-shadow: 4px 4px 0px 0px #FFFFFF;
+  opacity: 25%;
+  align-self: center;
+  /* margin-bottom: 30px; */
+  overflow: hidden;
+}
+
+.reference-image-container .reference-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}

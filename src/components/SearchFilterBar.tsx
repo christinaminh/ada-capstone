@@ -1,19 +1,28 @@
 import React from 'react'
-// import ColorPalette from './ColorPalette';
-
+import ColorPalette from './ColorPalette';
 import { ColorPaletteProps } from './ColorPalette'
-import InspirationBar from './InspirationBar';
-import { InspirationBarProps } from './InspirationBar';
+import './SearchFilterBar.css'
 
-interface SearchFilterProps extends ColorPaletteProps, InspirationBarProps{
-
+interface SearchFilterProps extends ColorPaletteProps {
+  image: string
 }
 
 const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickColorCallback}) => {
 
   return(
     <div className='search-filter-bar'>
-      { image ? <InspirationBar image={image} colors={colors} onClickColorCallback={onClickColorCallback}/> : null }
+      <div className='reference-image-container'>
+        { image ? <img src={image} alt='reference' className='reference-image'/> : null }
+      </div>
+      <div className='filter-label'>FILTER BY</div>
+      <div className='filter-label'>Color</div>
+      <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} />
+
+      <div className='filter-label'>CATEGORIES</div>
+
+ 
+
+
     </div>
 
 
