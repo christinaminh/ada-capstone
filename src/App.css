@@ -24,46 +24,11 @@
   color: white;
 } */
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 nav ul, nav {
   list-style-type: none;
   display: flex;
-}
-
-
-
-img {
-  height: 100px;
-  width: 100px;
-}
-
-.upload-button {
-  height: 26px;
-
-  /* left: 0px;
-  right: 0.13px;
-  top: 0px;
-  bottom: 0px; */
-
-  background: #264653;
-  border-radius: 2px;
-  color: white;
-
-  width: 189px;
-  height: 36px;
-  border-radius: 2px;
 }
 
 * {

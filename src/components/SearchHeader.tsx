@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
+import Logo from '../images/Logo.svg'
 
-
-const Header = () => {
+const SearchHeader = () => {
   return(
     <header>
       <nav>
@@ -16,13 +16,15 @@ const Header = () => {
           <li>
             <NavLink to='/'>Contact</NavLink>
           </li>
-          <li>
-            <NavLink to='/'>Explore</NavLink>
-          </li>
+
         </ul>
+
+        <img src={Logo} alt='logo'/>
+
+        <NavLink to='/'>Explore</NavLink>
       </nav>
     </header>
   )
 }
 
-export default Header
+export default SearchHeader

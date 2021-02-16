@@ -15,8 +15,16 @@ import { deltaE, getColorName } from './CompareColors'
 import { fetchSerpWowSearchResults } from './SerpWowAPI'
 import splashy  from 'splashy'
 import convert from 'color-convert'
-import Header from './components/Header'
+import Header from './components/SearchHeader'
+import LandingHeader from './components/LandingHeader'
+import Footer from './components/Footer'
+
 import './components/SearchPageLayout.css'
+import './components/LandingPage.css'
+import landing from './images/designer.svg'
+import step1 from './images/step_1.svg'
+import step2 from './images/step_2.svg'
+
 
 import { Circle } from 'styled-spinkit'
 
@@ -247,16 +255,6 @@ const App: React.FC = () => {
 
 <Switch>
   <Route exact path='/search'>
-      {/* <SearchPageLayout
-        image={referenceImage} 
-        colors={colorResults}
-        selectedColors={selecte}
-        onClickColorCallback={onClickColor}
-        onSearchSubmitCallback={onSearchSubmit}
-        colorMatchedResults={colorMatchedResults}
-        setUploadModalShow={() => setUploadModalShow(true)}
-      /> */}
-
     <div className='search-page'>
       <div className='search-header'>
         <Header />
@@ -287,13 +285,59 @@ const App: React.FC = () => {
   </Route>
 
   <Route path='/'>
-    <Header />
+    
 
-      { errorMessage ? <div>{errorMessage}</div> : null }
+    <div className='landing-page'>
+      {/* <img src={Landing} alt='hero' className='landing-background'></img> */}
 
-      <button className='upload-button'onClick={() => setUploadModalShow(true)}>
-          Upload a photo
-      </button>
+      <LandingHeader />
+
+      <div className='landing-main'>
+
+        <div className='landing-content'>
+          <img src={landing} alt='hero' className='landing-background'></img>
+
+          {/* <div className='error-message'>
+            { errorMessage ? <div>{errorMessage}</div> : null }
+          </div> */}
+          
+          <div className='landing-1'>
+            <h1>A new way to find your dream furniture</h1>
+            <p>Find furniture that fits your aesthetic. 
+              Furnie is here to modernize traditional furniture shopping. 
+              Quick, simple, and customized to your personal taste.</p>
+
+            <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+              Upload a photo
+            </button>
+          </div>
+
+          <img src={step1} alt='step 1' className='step1-image'></img>
+
+          <div className='landing-2'>
+            <h2>Upload Your Inspiration Photo</h2>
+            <p>All you have to do is select and upload your furniture inspiration photo, and we will do the rest. 
+              This can be done on either your phone and computer. 
+              It’s that simple and convenient!</p>
+          </div>
+
+          <img src={step2} alt='step 2' className='step2-image'></img>
+
+          <div className='landing-3'>
+
+            <h2>Get Matched and Find Your Dream Furniture</h2>
+            <p>The top five colors in your inspiration photo will be used to find visually similar furniture for sale.</p> 
+            <p>You can use filters to narrow down your search results.</p>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+
+
+
+    </div>
+
 
 
   </Route>
