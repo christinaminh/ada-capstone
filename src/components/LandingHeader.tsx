@@ -1,10 +1,13 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
 import './LandingHeader.css'
-import Logo from '../images/Logo.svg'
+import logo from '../images/Logo.svg'
 
+export interface HeaderProps {
+  setUploadModalShow: (arg0: boolean) => void
+}
 
-const LandingHeader = () => {
+const LandingHeader:React.FC<HeaderProps> = ({setUploadModalShow}) => {
   return(
     <header>
       <nav className='header-nav'> 
@@ -20,9 +23,11 @@ const LandingHeader = () => {
           </li>
         </ul>
 
-        <img src={Logo} alt='logo'className='landing-logo'/>
+        <img src={logo} alt='logo'className='landing-logo'/>
 
-        <NavLink to='/' className='upload-button'>Explore</NavLink>
+        <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+          Explore
+         </button>
       </nav>
 
     </header>

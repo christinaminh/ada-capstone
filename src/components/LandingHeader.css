@@ -1,7 +1,6 @@
 .header-nav {
   align-items: center;
   margin: 10px 100px;
-  /* margin-right: minmax(20px, 100px);  */
   text-align: center;
   min-width: 650px;
 
@@ -14,7 +13,11 @@ nav a, nav a:hover, nav a:active {
   color: #264653;
   font-size: 16px;
   line-height: 24px;
-  text-decoration-color: #E9C46A;
+}
+
+nav a:hover {
+  border-bottom: 1.5px solid #E9C46A;
+  text-decoration: none
 }
 
 nav ul {
@@ -23,27 +26,10 @@ nav ul {
 }
 
 .header-nav li {
-  margin-right: 50px
+  margin-right: 50px;
 }
 
 .landing-logo {
   margin-left: -80px
 }
 
-.upload-button {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 26px;
-
-  height: 26px;
-  background: #264653;
-  border-radius: 2px;
-  color: white;
-
-  width: 189px;
-  height: 36px;
-  border-radius: 2px;
-  text-align: center;
-
-  padding-top: 5px;
-}

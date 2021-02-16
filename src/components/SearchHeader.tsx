@@ -1,11 +1,14 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
-import Logo from '../images/Logo.svg'
+import logo from '../images/Logo.svg'
+import { HeaderProps } from './LandingHeader'
 
-const SearchHeader = () => {
+
+const SearchHeader:React.FC<HeaderProps> = ({setUploadModalShow}) => {
   return(
     <header>
-      <nav>
+      <nav className='header-nav'>
+      <img src={logo} alt='logo'className='search-logo'/>
         <ul>
           <li>
             <NavLink to='/'>Home</NavLink>
@@ -16,12 +19,11 @@ const SearchHeader = () => {
           <li>
             <NavLink to='/'>Contact</NavLink>
           </li>
-
         </ul>
-
-        <img src={Logo} alt='logo'/>
-
-        <NavLink to='/'>Explore</NavLink>
+        
+        <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+          Upload
+         </button>
       </nav>
     </header>
   )

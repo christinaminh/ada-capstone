@@ -257,40 +257,41 @@ const App: React.FC = () => {
   <Route exact path='/search'>
     <div className='search-page'>
       <div className='search-header'>
-        <Header />
-
-        <button className='upload-button'onClick={() => setUploadModalShow(true)}>
-          Upload a photo
-        </button>
-
-        { errorMessage ? <div>{errorMessage}</div> : null }
+        <Header setUploadModalShow={setUploadModalShow}/>
       </div>
 
-      <SearchFilterBar 
-      colors={colorResults}
-      // selected={selectedColors}
-      onClickColorCallback={onClickColor}         
-      image={referenceImage} 
-      />
+    <div className='search-main'>
+      <div className='search-content'>
+        { errorMessage ? <div className='error-message'>{errorMessage}</div> : <div className='error-message'></div> }
 
-      <div className='search-results-container'> 
-        { searchLoading && (selectedColorMatchedResults.length === 0) ? 
-          < Circle color={'#2A9D8F'}/> 
-          :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-            <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
-          )))
-        }
+        <SearchFilterBar 
+          colors={colorResults}
+          // selected={selectedColors}
+          onClickColorCallback={onClickColor}         
+          image={referenceImage} 
+          />
+
+        <div className='search-results-container'> 
+          { searchLoading && (selectedColorMatchedResults.length === 0) ? 
+            < Circle color={'#2A9D8F'}/> 
+            :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
+              <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
+            )))
+          }
+        </div>
       </div>
+
+      <Footer />
+    </div>
+
     </div>
   </Route>
 
   <Route path='/'>
-    
-
     <div className='landing-page'>
       {/* <img src={Landing} alt='hero' className='landing-background'></img> */}
 
-      <LandingHeader />
+      <LandingHeader setUploadModalShow={setUploadModalShow}/>
 
       <div className='landing-main'>
 

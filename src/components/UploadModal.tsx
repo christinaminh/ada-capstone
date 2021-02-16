@@ -45,7 +45,7 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
     setTimeout( () => {
 
     history.push('/search')
-    // onHide()
+    onHide()
     }, 2000)
   }
 

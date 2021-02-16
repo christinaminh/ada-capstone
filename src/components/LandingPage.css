@@ -19,12 +19,9 @@
 .landing-main {
   grid-area: main;
   overflow: auto;
-
-  /* padding: 15px 5px 10px 5px; */
-
+  
   display: grid;
   grid-template-rows: 1fr auto;
-  /* grid-template-columns: 1fr minmax(0,900px) 1fr; */
 }
 
 /* [row-start] / [col-start] / [row-end] / [col-end] */
