@@ -419,9 +419,9 @@ const App: React.FC = () => {
           </div>
         </Route>
 
-        {/* <Route render={
+        <Route render={
           () => <h1>404: No furniture to be found here...</h1>
-        }/> */}
+        }/>
 
       </Switch>
 
