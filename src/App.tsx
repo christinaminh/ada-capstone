@@ -116,17 +116,14 @@ const App: React.FC = () => {
     setSearchLoading(true)
   }
 
-
+  const initialSearchRender = useRef(true)
   useEffect(()=> {
     let searchIsMounted = true
 
+    
     const onSearchSubmit = async (newSearchQuery: string) => {
       if(!referenceImage){
         setErrorMessage('Upload image to start search')
-
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 6000)
 
       } else if (selectedColors.length === 0){
         setErrorMessage('Select colors to search')
@@ -159,12 +156,17 @@ const App: React.FC = () => {
 
                 // if response is an error string, set error message
                 } else if(typeof response === 'string'){
-                  setErrorMessage(response)
+                  
+                  if( response.includes('402') ) {
+                    setErrorMessage('Number of searches has exceeded the limit. Please notify site owner to scrounge up some couch pennies to increase search limit.')
+                    setSearchLoading(false)
+                  } else {
+                    setErrorMessage(response)
 
-                  setTimeout(() => {
-                    setErrorMessage(null)
-                  }, 6000)
-
+                    setTimeout(() => {
+                      setErrorMessage(null)
+                    }, 6000)
+                  }
                 }
             })
           }
@@ -172,7 +174,14 @@ const App: React.FC = () => {
       }
     }
 
-    onSearchSubmit(searchQuery)
+    if (initialSearchRender.current) {
+      console.log('Initial Search Render')
+      initialSearchRender.current = false
+    } else {
+      if (searchIsMounted) {
+        onSearchSubmit(searchQuery)
+      }
+    }
 
     return () => {
       searchIsMounted = false
@@ -181,45 +190,47 @@ const App: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery])
 
-  const initialRender = useRef(true)
+  const initialColorFilterRender = useRef(true)
   useEffect(() => {
     let colorComparisonIsMounted = true
 
-    if (initialRender.current) {
-      initialRender.current = false
-    } else {
-        const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
-          const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
-                  
-          for( const searchResult of searchResults) {
-            if (colorComparisonIsMounted) {
-              await splashy(searchResult.imageUrl)
-                .then( response => {
 
-                  const colorArraySearchResults = response.map( color => {
-                    return convert.hex.rgb(color)
-                  })
-                  
-                  if( typeof colorArraySearchResults === 'object') {
-                    colorComparisonLoop:
-                    for(let searchResultRGB of colorArraySearchResults) {
-                      for(let selectColor of selectedColors) {
-                        const colorDiff = deltaE(searchResultRGB, selectColor.color)
-                
-                        if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
-                          newColorMatches[`${selectColor.id}`].push(searchResult)
-                          break colorComparisonLoop
-                        }
-                      }
+    const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
+      const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
+              
+      for( const searchResult of searchResults) {
+        if (colorComparisonIsMounted) {
+          await splashy(searchResult.imageUrl)
+            .then( response => {
+
+              const colorArraySearchResults = response.map( color => {
+                return convert.hex.rgb(color)
+              })
+              
+              if( typeof colorArraySearchResults === 'object') {
+                colorComparisonLoop:
+                for(let searchResultRGB of colorArraySearchResults) {
+                  for(let selectColor of selectedColors) {
+                    const colorDiff = deltaE(searchResultRGB, selectColor.color)
+            
+                    if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
+                      newColorMatches[`${selectColor.id}`].push(searchResult)
+                      break colorComparisonLoop
                     }
                   }
-                })
-            }
-            }
-          setColorMatchedResults(newColorMatches)
+                }
+              }
+            })
         }
+        }
+      setColorMatchedResults(newColorMatches)
+    }
 
 
+    if (initialColorFilterRender.current) {
+      console.log('Initial Color Filtering Render')
+      initialColorFilterRender.current = false
+    } else {
       if (colorComparisonIsMounted && searchResults.length > 0 && selectedColors.length > 0 ) {
         filterSearchByColor(selectedColors, searchResults)
       }
@@ -233,9 +244,12 @@ const App: React.FC = () => {
   }, [searchResults])
 
   
+  const initialColorMatchedRender = useRef(true)
+
   useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false
+    if (initialColorMatchedRender.current) {
+      console.log('Initial Color Matching Render')
+      initialColorMatchedRender.current = false
     } else if ( selectedColors.length < 6 ) {
       let selectedMatchedResults: SearchResultProps[] = []
 
@@ -264,7 +278,7 @@ const App: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColors, colorMatchedResults])
 
-
+  
   const resultsToShow = selectedColorMatchedResults.slice(0, next)
 
 

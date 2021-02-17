@@ -26,6 +26,7 @@ const UploadStatusBar: React.FC<StatusBarProps> = ({onCloseUploadProgress, onUpl
             setShowProgressBar(false)
             onUploadComplete()
           }
+          
           return newValue
         })
       }, 1000)

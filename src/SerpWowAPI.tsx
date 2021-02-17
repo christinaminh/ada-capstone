@@ -67,6 +67,7 @@ export const fetchSerpWowSearchResults = async (searchQuery: string, colorName: 
     })
     .catch (error => {
       console.log('Error response from Serp API:', error)
+
       return error.message
     })
 }
