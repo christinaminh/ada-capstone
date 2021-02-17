@@ -1,5 +1,4 @@
 import React from 'react'
-import { ColorProps } from './Color'
 import ColorPalette from './ColorPalette';
 import { ColorPaletteProps } from './ColorPalette'
 import './SearchFilterBar.css'
