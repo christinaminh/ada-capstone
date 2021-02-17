@@ -25,6 +25,7 @@ nav ul {
   display: flex;
   justify-self: left;
   align-items: center;
+  padding-left: 0px;
 }
 
 .header-nav li {
