@@ -21,9 +21,9 @@ const SearchResult: React.FC<SearchResultProps> = ({title, imageUrl, price, link
         <p className='product-title'>{title}</p>
       </div>
 
-      <div>{price}</div>
+      <div className='price'>{price}</div>
 
-      <a href={link} className='shop-button'>Shop</a>
+      <a href={link} className='shop-button hide'>Shop</a>
     </div>
   )
 }

@@ -8,13 +8,19 @@ import { Button, Accordion, Card } from 'react-bootstrap'
 
 interface SearchFilterProps extends ColorPaletteProps {
   image: string,
-  selectedColors: ColorProps[]
+  // selectedColors: ColorProps[]
   // onSearchSubmitCallback?: (searchQuery: string, selectedColors: ColorProps[]) => void
   setSearchQuery: (arg0: string) => void
+  resetSearch: () => void
 }
 
-const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickColorCallback, selectedColors, setSearchQuery}) => {
+const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickColorCallback, setSearchQuery, resetSearch}) => {
 
+  const onSelectCategory = ( searchQuery: string) => {
+    resetSearch()
+
+    setSearchQuery(searchQuery)
+  }
   return(
     <div className='search-filter-bar'>
       <div className='reference-image-container'>
@@ -35,14 +41,14 @@ const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickCol
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Card.Body className='sub-category'>
-              <div onClick={() => {setSearchQuery('bedframe')}}>Bedframes</div>
-              <div onClick={() => {setSearchQuery('bedding')}}>Bedding</div>
-              <div onClick={() => {setSearchQuery('nightstand')}}>Nightstands</div>
-              <div onClick={() => {setSearchQuery('lamp')}}>Lamps</div>
-              <div onClick={() => {setSearchQuery('dresser')}}>Dressers</div>
-              <div onClick={() => {setSearchQuery('bedroom storage organization')}}>Storage and Organization</div>
-              <div onClick={() => {setSearchQuery('desk')}}>Desks</div>
-              <div onClick={() => {setSearchQuery('rug')}}>Rugs</div>
+              <div onClick={() => {onSelectCategory('bedframe')}}>Bedframes</div>
+              <div onClick={() => {onSelectCategory('bedding')}}>Bedding</div>
+              <div onClick={() => {onSelectCategory('nightstand')}}>Nightstands</div>
+              <div onClick={() => {onSelectCategory('lamp')}}>Lamps</div>
+              <div onClick={() => {onSelectCategory('dresser')}}>Dressers</div>
+              <div onClick={() => {onSelectCategory('bedroom storage organization')}}>Storage and Organization</div>
+              <div onClick={() => {onSelectCategory('desk')}}>Desks</div>
+              <div onClick={() => {onSelectCategory('rug')}}>Rugs</div>
             </Card.Body>
 
           </Accordion.Collapse>
@@ -57,13 +63,12 @@ const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickCol
           </Card.Header>
           <Accordion.Collapse eventKey="1">
             <Card.Body className='sub-category'>
-              <div onClick={() => {setSearchQuery('sofa couch')}}>Sofas</div>
-              <div onClick={() => {setSearchQuery('armchair')}}>Armchairs</div>
-              <div onClick={() => {setSearchQuery('throw blanket')}}>Throw Blankets</div>
-              <div onClick={() => {setSearchQuery('coffee table')}}>Coffee Tables</div>
-              <div onClick={() => {setSearchQuery('side table')}}>Side Tables</div>
-              <div onClick={() => {setSearchQuery('media furniture')}}>Media Furniture</div>
-              <div onClick={() => {setSearchQuery('bookcase shelving')}}>Shelving Units</div>
+              <div onClick={() => {onSelectCategory('sofa couch')}}>Sofas</div>
+              <div onClick={() => {onSelectCategory('armchair')}}>Armchairs</div>
+              <div onClick={() => {onSelectCategory('throw blanket')}}>Throw Blankets</div>
+              <div onClick={() => {onSelectCategory('coffee table')}}>Coffee Tables</div>
+              <div onClick={() => {onSelectCategory('side table')}}>Side Tables</div>
+              <div onClick={() => {onSelectCategory('bookcase shelving')}}>Shelving Units</div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -76,13 +81,13 @@ const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickCol
           </Card.Header>
           <Accordion.Collapse eventKey="2">
             <Card.Body className='sub-category'>
-              <div onClick={() => {setSearchQuery('dining table')}}>Dining Tables</div>
-              <div onClick={() => {setSearchQuery('dining chair')}}>Dining Chairs</div>
-              <div onClick={() => {setSearchQuery('dining set')}}>Dining Sets</div>
-              <div onClick={() => {setSearchQuery('dining stool bench')}}>Stools and Benches</div>
-              <div onClick={() => {setSearchQuery('cookware')}}>Cookware</div>
-              <div onClick={() => {setSearchQuery('tableware')}}>Tableware</div>
-              <div onClick={() => {setSearchQuery('kitchen storage')}}>Storage and Organization</div>
+              <div onClick={() => {onSelectCategory('dining table')}}>Dining Tables</div>
+              <div onClick={() => {onSelectCategory('dining chair')}}>Dining Chairs</div>
+              <div onClick={() => {onSelectCategory('dining set')}}>Dining Sets</div>
+              <div onClick={() => {onSelectCategory('dining stool bench')}}>Stools and Benches</div>
+              <div onClick={() => {onSelectCategory('cookware')}}>Cookware</div>
+              <div onClick={() => {onSelectCategory('tableware')}}>Tableware</div>
+              <div onClick={() => {onSelectCategory('kitchen storage')}}>Storage and Organization</div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -95,9 +100,9 @@ const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickCol
           </Card.Header>
           <Accordion.Collapse eventKey="3">
             <Card.Body className='sub-category'>
-              <div onClick={() => {setSearchQuery('bathroom accessories')}}>Bathroom Accessories</div>
-              <div onClick={() => {setSearchQuery('towel')}}>Towels</div>
-              <div onClick={() => {setSearchQuery('bathroom storage')}}>Storage and Organization</div>
+              <div onClick={() => {onSelectCategory('bathroom accessories')}}>Bathroom Accessories</div>
+              <div onClick={() => {onSelectCategory('towel')}}>Towels</div>
+              <div onClick={() => {onSelectCategory('bathroom storage')}}>Storage and Organization</div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>

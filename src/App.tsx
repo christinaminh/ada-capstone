@@ -24,9 +24,12 @@ import './components/LandingPage.css'
 import landing from './images/designer.svg'
 import step1 from './images/step_1.svg'
 import step2 from './images/step_2.svg'
+import plusicon from './images/plus-icon.svg'
+import MORE from './images/MORE.svg'
 
 
 import { Circle } from 'styled-spinkit'
+import ColorMatchedResults from './components/ColorMatchedResults'
 
 
 const App: React.FC = () => {
@@ -38,11 +41,13 @@ const App: React.FC = () => {
     // const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({})
   const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
   const [selectedColorMatchedResults, setSelectedColorMatchedResults] = useState<SearchResultProps[]>([])
-
   const [uploadModalShow, setUploadModalShow] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false)
   const [referenceImage, setReferenceImage] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const resultsPerPage = 9
+  const [next, setNext] = useState(resultsPerPage)
 
 
   // Select/Deselect color from color palette
@@ -69,10 +74,8 @@ const App: React.FC = () => {
     setReferenceImage(imgUrl) 
     setColorResults([])
     setSelectedColors([])
-    setSearchResults([])
-    setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
-    setSelectedColorMatchedResults([])
-    
+
+    resetSearch()
 
     splashy(imgUrl)
       .then( response => {
@@ -80,7 +83,6 @@ const App: React.FC = () => {
           return convert.hex.rgb(color)
         })
 
-        // let colorArray = response as Array<number[]>
         if(colorArray.length > 0) {
           const colorObjects: ColorProps[] = []
           let i = 1
@@ -97,8 +99,7 @@ const App: React.FC = () => {
 
           setColorResults(colorObjects)
           setSelectedColors(colorObjects)
-          setSearchLoading(true)
-          // onSearchSubmit('home furniture', colorObjects)
+          // setSearchLoading(true)
           setSearchQuery('home furniture')
 
 
@@ -112,67 +113,31 @@ const App: React.FC = () => {
       })
   }
 
-
-  // const onSearchSubmit = async (searchQuery: string, selectedColors: ColorProps[]) => {
-  //   console.log('IN SEARCH SUBMIT with colors', selectedColors)
-
-  //   if(selectedColors.length === 0){
-  //     setErrorMessage('Select colors to search')
-
-  //   } else {
-  //     let colorNameSet: any = new Set()
-  //     for( const color of selectedColors) {
-  //       colorNameSet.add(color.name)
-  //     }
-
-  //     console.log("~~~~~~~COLOR SET", colorNameSet)
-  //     let newSearchResults = [...searchResults]
-
-  //     for(let colorName of colorNameSet) {
-
-  //       console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
-  //       await fetchSerpWowSearchResults(searchQuery, colorName)
-  //       // eslint-disable-next-line no-loop-func
-  //       .then( response => {
-  //         // if response is an array of search results, set searchResults
-  //         if( typeof response === 'object') {
-  //           newSearchResults = newSearchResults.concat(response)
-
-  //           console.log('I GOT SEARCH RESULTS!')
-
-  //           setSearchResults(newSearchResults)
-            
-  //         // if response is an error string, set error message
-  //         } else if(typeof response === 'string'){
-  //           setErrorMessage(response)
-
-  //           setTimeout(() => {
-  //             setErrorMessage(null)
-  //           }, 6000)
-
-  //           console.log('NO SEARCH RESULTS! I GOT AN ERROR')
-
-  //         }
-  //       })
-  //     }
-  //   }
-  // }
+  const resetSearch = () => {
+    setSearchResults([])
+    setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
+    setSelectedColorMatchedResults([])
+    setNext(resultsPerPage)
+    setSearchLoading(true)
+  }
 
   useEffect(()=> {
-    let isMounted = true
+    let searchIsMounted = true
 
     const onSearchSubmit = async (newSearchQuery: string) => {
-      setSearchResults([])
-      setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
-      setSelectedColorMatchedResults([])
-      
-      if(selectedColors.length === 0){
-        setErrorMessage('Select colors to search')
+      if(!referenceImage){
+        setErrorMessage('Upload image to start search')
 
         setTimeout(() => {
           setErrorMessage(null)
         }, 6000)
 
+      } else if (selectedColors.length === 0){
+        setErrorMessage('Select colors to search')
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 6000)
       } else {
         let colorNameSet: any = new Set()
         for( const color of selectedColors) {
@@ -191,7 +156,7 @@ const App: React.FC = () => {
             // if response is an array of search results, set searchResults
             if( typeof response === 'object') {
 
-              if (isMounted) {
+              if (searchIsMounted) {
                 newSearchResults = newSearchResults.concat(response)
 
                 console.log('I GOT SEARCH RESULTS!')
@@ -214,17 +179,21 @@ const App: React.FC = () => {
       }
     }
 
-    onSearchSubmit(searchQuery)
+    // if (searchIsMounted) {
+      onSearchSubmit(searchQuery)
+    // }
 
     return () => {
-      isMounted = false
+      searchIsMounted = false
     }
 
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [searchQuery])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery])
 
   const initialRender = useRef(true)
   useEffect(() => {
+    let colorComparisonIsMounted = true
+
     if (initialRender.current) {
       initialRender.current = false
     } else {
@@ -260,16 +229,22 @@ const App: React.FC = () => {
                     }
                   }
                 }
-
-                // setColorMatchedResults(newColorMatches)
               })
             }
           setColorMatchedResults(newColorMatches)
         }
+
+        if (colorComparisonIsMounted) {
+          filterSearchByColor(selectedColors, searchResults)
+        }
     
-        filterSearchByColor(selectedColors, searchResults)
+        return () => {
+          colorComparisonIsMounted = false
+        }    
       }
     }
+    
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
 
@@ -277,19 +252,36 @@ const App: React.FC = () => {
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
-    } else {
+    } else if ( selectedColors.length < 6 ) {
       let selectedMatchedResults: SearchResultProps[] = []
+
       for(const color of selectedColors) {
         selectedMatchedResults = selectedMatchedResults.concat(colorMatchedResults[color.id])
       }
 
-
       setSelectedColorMatchedResults(selectedMatchedResults)
+    } else {
+      if ( colorMatchedResults !== {'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]} ) {
+      
+        const newMatchedResults = [...selectedColorMatchedResults]
+
+        for(const colorKey in colorMatchedResults) {
+          const resultArray = colorMatchedResults[colorKey]
+          for( const result of resultArray ){
+            if(!newMatchedResults.includes(result)) {
+              newMatchedResults.push(result)
+            }
+          }
+        }
+
+        setSelectedColorMatchedResults(newMatchedResults)
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColors, colorMatchedResults])
 
 
+  const resultsToShow = selectedColorMatchedResults.slice(0, next)
 
   return (
     <Router>
@@ -300,109 +292,104 @@ const App: React.FC = () => {
         onImageSubmitCallback={onImageSubmit} 
         colors={colorResults} 
         onClickColorCallback={onClickColor} 
-        // onSearchSubmitCallback={onSearchSubmit}
-
       />
 
-<Switch>
-  <Route exact path='/search'>
-    <div className='search-page'>
-      <div className='search-header'>
-        <Header setUploadModalShow={setUploadModalShow}/>
-      </div>
+      <Switch>
+        <Route exact path='/search'>
+          <div className='search-page'>
+            <div className='search-header'>
+              <Header setUploadModalShow={setUploadModalShow}/>
+            </div>
 
-    <div className='search-main'>
-      <div className='search-content'>
-        { errorMessage ? <div className='error-message'>{errorMessage}</div> : <div className='error-message'></div> }
+          <div className='search-main'>
+            <div className='search-content'>
+              { errorMessage ? <div className='error-message'>{errorMessage}</div> : <div className='error-message'></div> }
 
-        <SearchFilterBar 
-          colors={colorResults}
-          selectedColors={selectedColors}
-          onClickColorCallback={onClickColor}         
-          image={referenceImage} 
-          // onSearchSubmitCallback={onSearchSubmit}
-          setSearchQuery={setSearchQuery}
-        />
+              <SearchFilterBar 
+                colors={colorResults}
+                // selectedColors={selectedColors}
+                onClickColorCallback={onClickColor}
+                image={referenceImage} 
+                setSearchQuery={setSearchQuery}
+                resetSearch={resetSearch}
+              />
 
-        <div className='search-results-container'> 
-          { searchLoading && (selectedColorMatchedResults.length === 0) ? 
-            < Circle color={'#2A9D8F'}/> 
-            :(selectedColorMatchedResults as SearchResultProps[]).map( ( (item, i) => (
-              <ColorMatchedSearchResult key={i} title={item.title} imageUrl={item.imageUrl} price={item.price} link={item.link}/>
-            )))
-          }
-        </div>
-      </div>
+              <div className='search-results-container'> 
+                { searchLoading && (selectedColorMatchedResults.length === 0) ? 
+                  < Circle color={'#2A9D8F'}/> 
+                  :
+                  <ColorMatchedResults resultsToRender={selectedColorMatchedResults.slice(0, next)}/>
+                }
 
-      <Footer />
-    </div>
+                { selectedColorMatchedResults.length > resultsToShow.length ? 
+                  <div onClick={() => {setNext(next+resultsPerPage)}} className='load-more-button'><img src={MORE} alt='more results'className='more'/><span><img src={plusicon} alt='more results' className='plus-icon'/></span></div> : null }
+              </div>
+            </div>
 
-    </div>
-  </Route>
-
-  <Route path='/'>
-    <div className='landing-page'>
-      {/* <img src={Landing} alt='hero' className='landing-background'></img> */}
-
-      <LandingHeader setUploadModalShow={setUploadModalShow}/>
-
-      <div className='landing-main'>
-
-        <div className='landing-content'>
-          <img src={landing} alt='hero' className='landing-background'></img>
-
-          {/* <div className='error-message'>
-            { errorMessage ? <div>{errorMessage}</div> : null }
-          </div> */}
-          
-          <div className='landing-1'>
-            <h1>A new way to find your dream furniture</h1>
-            <p>Find furniture that fits your aesthetic. 
-              Furnie is here to modernize traditional furniture shopping. 
-              Quick, simple, and customized to your personal taste.</p>
-
-            <button className='upload-button'onClick={() => setUploadModalShow(true)}>
-              Upload a photo
-            </button>
+            <Footer />
           </div>
 
-          <img src={step1} alt='step 1' className='step1-image'></img>
+          </div>
+        </Route>
 
-          <div className='landing-2'>
-            <h2>Upload Your Inspiration Photo</h2>
-            <p>All you have to do is select and upload your furniture inspiration photo, and we will do the rest. 
-              This can be done on either your phone and computer. 
-              It’s that simple and convenient!</p>
+        <Route path='/'>
+          <div className='landing-page'>
+            <LandingHeader setUploadModalShow={setUploadModalShow}/>
+
+            <div className='landing-main'>
+
+              <div className='landing-content'>
+                <img src={landing} alt='hero' className='landing-background'></img>
+
+                
+                <div className='landing-1'>
+                  <h1>A new way to find your dream furniture</h1>
+                  <p>Find furniture that fits your aesthetic. 
+                    Furnie is here to modernize traditional furniture shopping. 
+                    Quick, simple, and customized to your personal taste.</p>
+
+                  <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+                    Upload a photo
+                  </button>
+                </div>
+
+                <img src={step1} alt='step 1' className='step1-image'></img>
+
+                <div className='landing-2'>
+                  <h2>Upload Your Inspiration Photo</h2>
+                  <p>All you have to do is select and upload your furniture inspiration photo, and we will do the rest. 
+                    This can be done on either your phone and computer. 
+                    It’s that simple and convenient!</p>
+                </div>
+
+                <img src={step2} alt='step 2' className='step2-image'></img>
+
+                <div className='landing-3'>
+
+                  <h2>Get Matched and Find Your Dream Furniture</h2>
+                  <p>The top five colors in your inspiration photo will be used to find visually similar furniture for sale.</p> 
+                  <p>You can use filters to narrow down your search results.</p>
+                </div>
+              </div>
+
+              <Footer />
+            </div>
+
+
+
           </div>
 
-          <img src={step2} alt='step 2' className='step2-image'></img>
 
-          <div className='landing-3'>
 
-            <h2>Get Matched and Find Your Dream Furniture</h2>
-            <p>The top five colors in your inspiration photo will be used to find visually similar furniture for sale.</p> 
-            <p>You can use filters to narrow down your search results.</p>
-          </div>
-        </div>
+        </Route>
 
-        <Footer />
-      </div>
+        <Route render={
+          () => <h1>Not Found</h1>
+        }/>
 
 
 
-    </div>
-
-
-
-  </Route>
-
-  <Route render={
-    () => <h1>Not Found</h1>
-  }/>
-
-
-
-</Switch>
+      </Switch>
 
 
       </div>

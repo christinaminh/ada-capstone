@@ -1,6 +1,6 @@
 .search-filter-bar {
   width: 299px;
-  height: 777px;
+  /* height: 777px; */
   background-color: #264653;
   margin: 0px 50px 50px 50px;
 
@@ -37,13 +37,16 @@
   min-width: 230px;
   min-height: 230px;
   object-fit: cover;
-  /* opacity: 100%; */
 }
 
 .accordian *, Accordian {
   background-color: #264653;
   border: none;
   text-decoration: none;
+}
+
+.accordian {
+  margin-bottom: 68px;
 }
 
 .accordian .card-header, .accordian .card-body, .accordian .card {
@@ -62,7 +65,6 @@
 .accordian .btn-link:link,
 .accordian .btn-link:visited {
   padding: 0; 
-  /* margin: 5px 28px; */
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
