@@ -371,7 +371,7 @@ const App: React.FC = () => {
                 <div className='landing-3'>
 
                   <h2>Get Matched and Find Your Dream Furniture</h2>
-                  <p>The top five colors in your inspiration photo will be used to find visually similar furniture for sale.</p> 
+                  <p>The top six colors in your inspiration photo will be used to find visually similar furniture for sale.</p> 
                   <p>You can use filters to narrow down your search results.</p>
                 </div>
               </div>
