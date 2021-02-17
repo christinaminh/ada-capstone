@@ -64,15 +64,14 @@
   grid-row: 1 / 2
 }
 
+
 .load-more-button {
   grid-row: 2 / 3;
   width: 992px;
   height: 56px;
-
   border: 0.5px solid #a3a9aa;
   box-sizing: border-box;
-  /* : rgba(196, 196, 196, 0.5); */
-  margin-top: -50px;
+  margin-top: -25px;
   margin-bottom: 40px;
   padding-top: 15px
 }
@@ -89,6 +88,7 @@
   width: 45.91px;
   height: 11.69px;
 }
+
 
 /* TODO */
 /* @media (max-width: 600px) {
