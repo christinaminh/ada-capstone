@@ -23,11 +23,13 @@ import { fetchSerpWowSearchResults } from './SerpWowAPI'
 import './App.css';
 import './components/SearchPageLayout.css'
 import './components/LandingPage.css'
-import landing from './images/designer.svg'
+// import landing from './images/designer.svg'
+import landing from './images/hero.svg'
 import step1 from './images/step_1.svg'
 import step2 from './images/step_2.svg'
 import plusicon from './images/plus-icon.svg'
 import MORE from './images/MORE.svg'
+
 
 
 const App: React.FC = () => {
@@ -184,12 +186,10 @@ const App: React.FC = () => {
     if (initialRender.current) {
       initialRender.current = false
     } else {
-      if(searchResults.length > 0  && selectedColors.length > 0 ) {
         const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
           const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
                   
           for( const searchResult of searchResults) {
-
             await splashy(searchResult.imageUrl)
               .then( response => {
 
@@ -215,15 +215,15 @@ const App: React.FC = () => {
           setColorMatchedResults(newColorMatches)
         }
 
-        if (colorComparisonIsMounted) {
-          filterSearchByColor(selectedColors, searchResults)
-        }
-    
-        return () => {
-          colorComparisonIsMounted = false
-        }    
+
+      if (colorComparisonIsMounted && searchResults.length > 0 && selectedColors.length > 0 ) {
+        filterSearchByColor(selectedColors, searchResults)
       }
     }
+
+    return () => {
+      colorComparisonIsMounted = false
+    }  
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
