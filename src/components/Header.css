@@ -6,6 +6,7 @@
 
   display: flex;
   justify-content: space-between;
+
 }
 
 nav a, nav a:hover, nav a:active {
@@ -42,6 +43,6 @@ nav ul {
   margin: 0px
 }
 
-header {
+.search-header {
   border-bottom: 0.5px solid rgba(38, 70, 83, 0.2);
 }
