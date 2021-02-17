@@ -38,7 +38,7 @@
 
 .error-message {
   grid-area: 1 / 1 / 2 / 4;
-  height: 50px;
+  height: 30px;
   margin: 15px
 }
 
