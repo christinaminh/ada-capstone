@@ -76,7 +76,6 @@ const App: React.FC = () => {
 
     splashy(imgUrl)
       .then( response => {
-        console.log('SPLASHY',response)
         const colorArray = response.map( color => {
           return convert.hex.rgb(color)
         })
