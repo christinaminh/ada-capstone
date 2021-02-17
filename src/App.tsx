@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
@@ -144,28 +144,30 @@ const App: React.FC = () => {
         let newSearchResults = [...searchResults]
 
         for(let colorName of colorNameSet) {
+          if (searchIsMounted) {
+            await fetchSerpWowSearchResults(newSearchQuery, colorName)
+              // eslint-disable-next-line no-loop-func
+              .then( response => {
+                // if response is an array of search results, set searchResults
+                if( typeof response === 'object') {
 
-          await fetchSerpWowSearchResults(newSearchQuery, colorName)
-          // eslint-disable-next-line no-loop-func
-          .then( response => {
-            // if response is an array of search results, set searchResults
-            if( typeof response === 'object') {
+                  if (searchIsMounted) {
+                    newSearchResults = newSearchResults.concat(response)
+      
+                    setSearchResults(newSearchResults)
+                  }
 
-              if (searchIsMounted) {
-                newSearchResults = newSearchResults.concat(response)
-  
-                setSearchResults(newSearchResults)
-              }
-            // if response is an error string, set error message
-            } else if(typeof response === 'string'){
-              setErrorMessage(response)
+                // if response is an error string, set error message
+                } else if(typeof response === 'string'){
+                  setErrorMessage(response)
 
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 6000)
+                  setTimeout(() => {
+                    setErrorMessage(null)
+                  }, 6000)
 
-            }
-          })
+                }
+            })
+          }
         }
       }
     }
@@ -190,27 +192,29 @@ const App: React.FC = () => {
           const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
                   
           for( const searchResult of searchResults) {
-            await splashy(searchResult.imageUrl)
-              .then( response => {
+            if (colorComparisonIsMounted) {
+              await splashy(searchResult.imageUrl)
+                .then( response => {
 
-                const colorArraySearchResults = response.map( color => {
-                  return convert.hex.rgb(color)
-                })
+                  const colorArraySearchResults = response.map( color => {
+                    return convert.hex.rgb(color)
+                  })
+                  
+                  if( typeof colorArraySearchResults === 'object') {
+                    colorComparisonLoop:
+                    for(let searchResultRGB of colorArraySearchResults) {
+                      for(let selectColor of selectedColors) {
+                        const colorDiff = deltaE(searchResultRGB, selectColor.color)
                 
-                if( typeof colorArraySearchResults === 'object') {
-                  colorComparisonLoop:
-                  for(let searchResultRGB of colorArraySearchResults) {
-                    for(let selectColor of selectedColors) {
-                      const colorDiff = deltaE(searchResultRGB, selectColor.color)
-              
-                      if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
-                        newColorMatches[`${selectColor.id}`].push(searchResult)
-                        break colorComparisonLoop
+                        if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
+                          newColorMatches[`${selectColor.id}`].push(searchResult)
+                          break colorComparisonLoop
+                        }
                       }
                     }
                   }
-                }
-              })
+                })
+            }
             }
           setColorMatchedResults(newColorMatches)
         }
