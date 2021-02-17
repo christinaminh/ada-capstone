@@ -42,6 +42,7 @@ const App: React.FC = () => {
   const [uploadModalShow, setUploadModalShow] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false)
   const [referenceImage, setReferenceImage] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
 
   // Select/Deselect color from color palette
@@ -64,7 +65,7 @@ const App: React.FC = () => {
 
 
   // After uploading image, call API to determine dominant colors in image
-  const onImageSubmit = (imgUrl: string) => {
+  const onImageSubmit = (imgUrl: string) => {    
     setReferenceImage(imgUrl) 
     setColorResults([])
     setSelectedColors([])
@@ -72,9 +73,7 @@ const App: React.FC = () => {
     setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
     setSelectedColorMatchedResults([])
     
-    //  extractColors(imgUrl, 1)
-      // .then(response => {
-    // prominent(imgUrl, { amount: 5, group: 40,  sample: 5 })
+
     splashy(imgUrl)
       .then( response => {
         const colorArray = response.map( color => {
@@ -98,11 +97,10 @@ const App: React.FC = () => {
 
           setColorResults(colorObjects)
           setSelectedColors(colorObjects)
-          console.log('SET SELECTED COLORS')
-
-
           setSearchLoading(true)
-          onSearchSubmit('home furniture', colorObjects)
+          // onSearchSubmit('home furniture', colorObjects)
+          setSearchQuery('home furniture')
+
 
         } else {
           setErrorMessage("Could not read image")
@@ -115,67 +113,123 @@ const App: React.FC = () => {
   }
 
 
-  
-  // const onSearchSubmit = (searchParams: SearchParams) => {
-  const onSearchSubmit = async (searchQuery: string, selectedColors: ColorProps[]) => {
-    // setSearchLoading(true)
+  // const onSearchSubmit = async (searchQuery: string, selectedColors: ColorProps[]) => {
+  //   console.log('IN SEARCH SUBMIT with colors', selectedColors)
 
-    console.log('IN SEARCH SUBMIT with colors', selectedColors)
+  //   if(selectedColors.length === 0){
+  //     setErrorMessage('Select colors to search')
 
-    if(selectedColors.length === 0){
-      setErrorMessage('Select colors to search')
+  //   } else {
+  //     let colorNameSet: any = new Set()
+  //     for( const color of selectedColors) {
+  //       colorNameSet.add(color.name)
+  //     }
 
-    } else {
-      let colorNameSet: any = new Set()
-      for( const color of selectedColors) {
-        colorNameSet.add(color.name)
-      }
+  //     console.log("~~~~~~~COLOR SET", colorNameSet)
+  //     let newSearchResults = [...searchResults]
 
-      console.log("~~~~~~~COLOR SET", colorNameSet)
-      let newSearchResults = [...searchResults]
+  //     for(let colorName of colorNameSet) {
 
-      for(let colorName of colorNameSet) {
+  //       console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
+  //       await fetchSerpWowSearchResults(searchQuery, colorName)
+  //       // eslint-disable-next-line no-loop-func
+  //       .then( response => {
+  //         // if response is an array of search results, set searchResults
+  //         if( typeof response === 'object') {
+  //           newSearchResults = newSearchResults.concat(response)
 
-        console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
-        await fetchSerpWowSearchResults(searchQuery, colorName)
-        // eslint-disable-next-line no-loop-func
-        .then( response => {
-          // if response is an array of search results, set searchResults
-          if( typeof response === 'object') {
-            newSearchResults = newSearchResults.concat(response)
+  //           console.log('I GOT SEARCH RESULTS!')
 
-            console.log('I GOT SEARCH RESULTS!')
-
-            setSearchResults(newSearchResults)
+  //           setSearchResults(newSearchResults)
             
-          // if response is an error string, set error message
-          } else if(typeof response === 'string'){
-            setErrorMessage(response)
+  //         // if response is an error string, set error message
+  //         } else if(typeof response === 'string'){
+  //           setErrorMessage(response)
 
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 6000)
+  //           setTimeout(() => {
+  //             setErrorMessage(null)
+  //           }, 6000)
 
-            console.log('NO SEARCH RESULTS! I GOT AN ERROR')
+  //           console.log('NO SEARCH RESULTS! I GOT AN ERROR')
 
-          }
-        })
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
+
+  useEffect(()=> {
+    let isMounted = true
+
+    const onSearchSubmit = async (newSearchQuery: string) => {
+      setSearchResults([])
+      setColorMatchedResults({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
+      setSelectedColorMatchedResults([])
+      
+      if(selectedColors.length === 0){
+        setErrorMessage('Select colors to search')
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 6000)
+
+      } else {
+        let colorNameSet: any = new Set()
+        for( const color of selectedColors) {
+          colorNameSet.add(color.name)
+        }
+
+        console.log("~~~~~~~COLOR SET", colorNameSet)
+        let newSearchResults = [...searchResults]
+
+        for(let colorName of colorNameSet) {
+
+          console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
+          await fetchSerpWowSearchResults(newSearchQuery, colorName)
+          // eslint-disable-next-line no-loop-func
+          .then( response => {
+            // if response is an array of search results, set searchResults
+            if( typeof response === 'object') {
+
+              if (isMounted) {
+                newSearchResults = newSearchResults.concat(response)
+
+                console.log('I GOT SEARCH RESULTS!')
+  
+                setSearchResults(newSearchResults)
+              }
+            // if response is an error string, set error message
+            } else if(typeof response === 'string'){
+              setErrorMessage(response)
+
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 6000)
+
+              console.log('NO SEARCH RESULTS! I GOT AN ERROR')
+
+            }
+          })
+        }
       }
-
-      // setSearchResults(newSearchResults) 
     }
-  }
 
+    onSearchSubmit(searchQuery)
+
+    return () => {
+      isMounted = false
+    }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [searchQuery])
 
   const initialRender = useRef(true)
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false
     } else {
-
       if(searchResults.length > 0  && selectedColors.length > 0 ) {
         const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
-          // const newColorMatches: SearchResultProps[] = [...colorMatchedResults]
           const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
         
           console.log('IN FILTER SEARCH BY COLOR')
@@ -200,10 +254,7 @@ const App: React.FC = () => {
                       const colorDiff = deltaE(searchResultRGB, selectColor.color)
               
                       if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
-                        console.log('color match for', selectColor)
                         newColorMatches[`${selectColor.id}`].push(searchResult)
-
-                        // newColorMatches.push(searchResult)
                         break colorComparisonLoop
                       }
                     }
@@ -217,7 +268,6 @@ const App: React.FC = () => {
         }
     
         filterSearchByColor(selectedColors, searchResults)
-    
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,6 +282,7 @@ const App: React.FC = () => {
       for(const color of selectedColors) {
         selectedMatchedResults = selectedMatchedResults.concat(colorMatchedResults[color.id])
       }
+
 
       setSelectedColorMatchedResults(selectedMatchedResults)
     }
@@ -250,6 +301,7 @@ const App: React.FC = () => {
         colors={colorResults} 
         onClickColorCallback={onClickColor} 
         // onSearchSubmitCallback={onSearchSubmit}
+
       />
 
 <Switch>
@@ -268,7 +320,8 @@ const App: React.FC = () => {
           selectedColors={selectedColors}
           onClickColorCallback={onClickColor}         
           image={referenceImage} 
-          onSearchSubmitCallback={onSearchSubmit}
+          // onSearchSubmitCallback={onSearchSubmit}
+          setSearchQuery={setSearchQuery}
         />
 
         <div className='search-results-container'> 

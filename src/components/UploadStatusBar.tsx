@@ -14,40 +14,27 @@ const UploadStatusBar: React.FC<StatusBarProps> = ({onCloseUploadProgress, onUpl
   
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgressValue((oldValue) => {
-        const newValue = oldValue + 50
+    let isMounted = true
 
-        if (newValue === 100) {
-          clearInterval(interval)
-          setShowProgressBar(false)
-          onUploadComplete()
-        }
-        return newValue
-      })
-    }, 1000)
+    if (isMounted) {
+      const interval = setInterval(() => {
+        setProgressValue((oldValue) => {
+          const newValue = oldValue + 10
+          
+          if (newValue === 100) {
+            clearInterval(interval)
+            setShowProgressBar(false)
+            onUploadComplete()
+          }
+          return newValue
+        })
+      }, 1000)
+    }
 
+  return () => { isMounted = false }
     
   }, [onUploadComplete])
 
-  // const showUploading = () => {
-
-  //   if (progressValue >= 100) {
-  //     return (
-  //       <div>Complete</div>
-  //     )
-  //   } else {
-  //     return (
-  //       <div onClick={() => {onCloseUploadProgress()}}>
-  //       <ProgressBar value={progressValue}/>
-  //       </div>
-  //     )
-  //   }
-  // // }
-  // if (progressValue >= 100) {
-  //   setShowProgress(false)
-  // }
-  
     
 
   return(

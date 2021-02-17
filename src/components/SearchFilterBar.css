@@ -25,8 +25,8 @@
   height: 230px;
   width: 230px;
   margin-top: 68px;
-  box-shadow: 4px 4px 0px 0px #FFFFFF;
-  opacity: 25%;
+  box-shadow: 4px 4px 0px 0px rgba(255, 255, 255, 0.25);;
+  /* opacity: 25%; */
   align-self: center;
   /* margin-bottom: 30px; */
   overflow: hidden;
@@ -34,8 +34,10 @@
 
 .reference-image-container .reference-image {
   width: 100%;
-  height: auto;
+  min-width: 230px;
+  min-height: 230px;
   object-fit: cover;
+  /* opacity: 100%; */
 }
 
 .accordian *, Accordian {
@@ -46,7 +48,8 @@
 
 .accordian .card-header, .accordian .card-body, .accordian .card {
   padding: 0; 
-  margin: 0;
+  margin: 10px 20px;
+
   background-color: #264653;
   border: none;
   text-decoration: none;
@@ -59,7 +62,7 @@
 .accordian .btn-link:link,
 .accordian .btn-link:visited {
   padding: 0; 
-  margin: 0;
+  /* margin: 5px 28px; */
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -70,3 +73,12 @@
   border: none;
 }
 
+.accordian .sub-category {
+  margin-top: 5px;
+  margin-left: 35px;
+}
+
+.sub-category > div {
+  margin-top: 5px;
+  cursor: pointer
+}
