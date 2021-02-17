@@ -199,9 +199,9 @@ const App: React.FC = () => {
                     for(let selectColor of selectedColors) {
                       const colorDiff = deltaE(searchResultRGB, selectColor.color)
               
-                      if(colorDiff < 5){
-                        console.log('color match!')
-                          newColorMatches[`${selectColor.id}`].push(searchResult)
+                      if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
+                        console.log('color match for', selectColor)
+                        newColorMatches[`${selectColor.id}`].push(searchResult)
 
                         // newColorMatches.push(searchResult)
                         break colorComparisonLoop
@@ -210,10 +210,10 @@ const App: React.FC = () => {
                   }
                 }
 
-                setColorMatchedResults(newColorMatches)
+                // setColorMatchedResults(newColorMatches)
               })
             }
-          // setColorMatchedResults(newColorMatches)
+          setColorMatchedResults(newColorMatches)
         }
     
         filterSearchByColor(selectedColors, searchResults)
@@ -233,7 +233,6 @@ const App: React.FC = () => {
         selectedMatchedResults = selectedMatchedResults.concat(colorMatchedResults[color.id])
       }
 
-      
       setSelectedColorMatchedResults(selectedMatchedResults)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,10 +265,11 @@ const App: React.FC = () => {
 
         <SearchFilterBar 
           colors={colorResults}
-          // selected={selectedColors}
+          selectedColors={selectedColors}
           onClickColorCallback={onClickColor}         
           image={referenceImage} 
-          />
+          onSearchSubmitCallback={onSearchSubmit}
+        />
 
         <div className='search-results-container'> 
           { searchLoading && (selectedColorMatchedResults.length === 0) ? 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
-import './LandingHeader.css'
+import './Header.css'
 import logo from '../images/Logo.svg'
 
 export interface HeaderProps {

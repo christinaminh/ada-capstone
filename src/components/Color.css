@@ -23,11 +23,11 @@
 
 .checked {
   opacity: 100%;
-  /* position: relative; */
 
   width: 50%;
   height: 50%;
-  margin: 25% 25%
+  margin: 25% 25%;
+  padding-bottom: 5px;
 }
 .unchecked {
   opacity: 0%;

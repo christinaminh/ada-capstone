@@ -2,11 +2,13 @@
   width: 299px;
   height: 777px;
   background-color: #264653;
-  margin-right: 50px;
+  margin: 0px 50px 50px 50px;
+
 
   display: flex;
   flex-direction: column;
 
+  box-shadow: 0px 30px 15px -5px rgba(0, 0, 0, 0.15);
 }
 
 .search-filter-bar * {
@@ -35,3 +37,36 @@
   height: auto;
   object-fit: cover;
 }
+
+.accordian *, Accordian {
+  background-color: #264653;
+  border: none;
+  text-decoration: none;
+}
+
+.accordian .card-header, .accordian .card-body, .accordian .card {
+  padding: 0; 
+  margin: 0;
+  background-color: #264653;
+  border: none;
+  text-decoration: none;
+}
+
+
+.accordian .btn-link, 
+.accordian .btn-link:hover, 
+.accordian .btn-link:active,
+.accordian .btn-link:link,
+.accordian .btn-link:visited {
+  padding: 0; 
+  margin: 0;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  color: #FFFFFF;
+  text-decoration: none;
+  text-decoration-color: #264653;
+  border: none;
+}
+

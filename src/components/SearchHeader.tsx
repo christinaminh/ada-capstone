@@ -7,7 +7,7 @@ import { HeaderProps } from './LandingHeader'
 const SearchHeader:React.FC<HeaderProps> = ({setUploadModalShow}) => {
   return(
     <header>
-      <nav className='header-nav'>
+      <nav className='search-header-nav header-nav'>
       <img src={logo} alt='logo'className='search-logo'/>
         <ul>
           <li>
@@ -19,11 +19,13 @@ const SearchHeader:React.FC<HeaderProps> = ({setUploadModalShow}) => {
           <li>
             <NavLink to='/'>Contact</NavLink>
           </li>
-        </ul>
-        
-        <button className='upload-button'onClick={() => setUploadModalShow(true)}>
+
+          <button className='upload-button'onClick={() => setUploadModalShow(true)}>
           Upload
          </button>
+        </ul>
+
+
       </nav>
     </header>
   )

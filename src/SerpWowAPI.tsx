@@ -10,8 +10,8 @@ interface Price {
   value : number,
   currency: string,
   raw: string,
-  name: string
-  is_free?: boolean
+  // name?: string
+  // is_free?: boolean
 }
 
 interface Categories {
@@ -54,16 +54,15 @@ export const fetchSerpWowSearchResults = async (searchQuery: string, colorName: 
     // return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
     return axios.get(SERPWOW_API_PATH, APIParams)
     .then( response => {
-      console.log('GOOD SERP RESPONSE', response)
-      console.log('GOOD PARAMS', APIParams)
 
       const searchResults = response.data.amazon_results
+      console.log('searchResults', searchResults)
 
       const parsedSearchResults = searchResults.map((searchObject: SearchResponse) => (
         { 
         title: searchObject.title,
         imageUrl: searchObject.image,
-        // price: searchObject.price.value,
+        price: ( searchObject.price ? searchObject.price.raw : '' ),
         link: searchObject.link
       } ))
 

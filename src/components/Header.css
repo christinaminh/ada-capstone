@@ -23,6 +23,7 @@ nav a:hover {
 nav ul {
   display: flex;
   justify-self: left;
+  align-items: center;
 }
 
 .header-nav li {
@@ -33,3 +34,14 @@ nav ul {
   margin-left: -80px
 }
 
+.search-header-nav {
+  margin: 10px 40px;
+}
+
+.search-header-nav ul {
+  margin: 0px
+}
+
+header {
+  border-bottom: 0.5px solid rgba(38, 70, 83, 0.2);
+}

@@ -9,12 +9,6 @@ export interface SearchResultProps {
 
 export interface ColorMatchedProps {
   [key: string]: SearchResultProps[]
-    // '1'?: SearchResultProps[]
-    // '2'?: SearchResultProps[]
-    // '3'?: SearchResultProps[]
-    // '4'?: SearchResultProps[]
-    // '5'?: SearchResultProps[]
-    // '6'?: SearchResultProps[]
 }
 
 const SearchResult: React.FC<SearchResultProps> = ({title, imageUrl, price, link}) => {
@@ -27,7 +21,7 @@ const SearchResult: React.FC<SearchResultProps> = ({title, imageUrl, price, link
         <p className='product-title'>{title}</p>
       </div>
 
-      <div>TODO: FIX PRICE{price}</div>
+      <div>{price}</div>
 
       <a href={link} className='shop-button'>Shop</a>
     </div>
