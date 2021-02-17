@@ -76,6 +76,7 @@ const App: React.FC = () => {
 
     splashy(imgUrl)
       .then( response => {
+        console.log('SPLASHY',response)
         const colorArray = response.map( color => {
           return convert.hex.rgb(color)
         })
@@ -140,37 +141,75 @@ const App: React.FC = () => {
 
         let newSearchResults = [...searchResults]
 
+        // for(let colorName of colorNameSet) {
+        //   if (searchIsMounted) {
+        //     await fetchSerpWowSearchResults(newSearchQuery, colorName)
+        //       // eslint-disable-next-line no-loop-func
+        //       .then( response => {
+        //         // if response is an array of search results, set searchResults
+        //         if( typeof response === 'object') {
+
+        //           if (searchIsMounted) {
+        //             newSearchResults = newSearchResults.concat(response)
+      
+        //             setSearchResults(newSearchResults)
+        //           }
+
+        //         // if response is an error string, set error message
+        //         } else if(typeof response === 'string'){
+                  
+        //           if( response.includes('402') ) {
+        //             setErrorMessage('Number of searches has exceeded the limit. Please notify site owner to scrounge up some couch pennies to increase search limit.')
+        //             setSearchLoading(false)
+        //           } else {
+        //             setErrorMessage(response)
+
+        //             setTimeout(() => {
+        //               setErrorMessage(null)
+        //             }, 6000)
+        //           }
+        //         }
+        //     })
+        //   }
+        // }
+
+        const promises = []
+
         for(let colorName of colorNameSet) {
           if (searchIsMounted) {
-            await fetchSerpWowSearchResults(newSearchQuery, colorName)
-              // eslint-disable-next-line no-loop-func
-              .then( response => {
-                // if response is an array of search results, set searchResults
-                if( typeof response === 'object') {
-
-                  if (searchIsMounted) {
-                    newSearchResults = newSearchResults.concat(response)
-      
-                    setSearchResults(newSearchResults)
-                  }
-
-                // if response is an error string, set error message
-                } else if(typeof response === 'string'){
-                  
-                  if( response.includes('402') ) {
-                    setErrorMessage('Number of searches has exceeded the limit. Please notify site owner to scrounge up some couch pennies to increase search limit.')
-                    setSearchLoading(false)
-                  } else {
-                    setErrorMessage(response)
-
-                    setTimeout(() => {
-                      setErrorMessage(null)
-                    }, 6000)
-                  }
-                }
-            })
+            promises.push(fetchSerpWowSearchResults(newSearchQuery, colorName))
           }
         }
+
+            // Promise.all is rejected if any of the elements are rejected. 
+        Promise.all(promises)
+          // eslint-disable-next-line no-loop-func
+          .then( allResponses => {
+            // if response is an array of search results, set searchResults
+            for( const response of allResponses ) {
+              if( typeof response === 'object') {
+
+                if (searchIsMounted) {
+                  newSearchResults = newSearchResults.concat(response)
+                  setSearchResults(newSearchResults)
+                }
+
+              // if response is an error string, set error message
+              } else if(typeof response === 'string'){
+                
+                if( response.includes('402') ) {
+                  setErrorMessage('Number of searches has exceeded the limit. Please notify site owner to scrounge up some couch pennies to increase search limit.')
+                  setSearchLoading(false)
+                } else {
+                  setErrorMessage(response)
+
+                  setTimeout(() => {
+                    setErrorMessage(null)
+                  }, 6000)
+                }
+              }
+            }
+        })
       }
     }
 
@@ -194,35 +233,43 @@ const App: React.FC = () => {
   useEffect(() => {
     let colorComparisonIsMounted = true
 
-
     const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
       const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
-              
+      
+      const promises = [] 
       for( const searchResult of searchResults) {
         if (colorComparisonIsMounted) {
-          await splashy(searchResult.imageUrl)
-            .then( response => {
+          promises.push({ 
+            colors: splashy(searchResult.imageUrl), 
+            searchResult: searchResult 
+          })
+        }
+      }
 
-              const colorArraySearchResults = response.map( color => {
-                return convert.hex.rgb(color)
-              })
-              
-              if( typeof colorArraySearchResults === 'object') {
-                colorComparisonLoop:
-                for(let searchResultRGB of colorArraySearchResults) {
-                  for(let selectColor of selectedColors) {
-                    const colorDiff = deltaE(searchResultRGB, selectColor.color)
+      Promise.all(promises)
+        .then( async allResponses => {
+          
+          for( const response of allResponses ) {
+            const colorArraySearchResults = (await response.colors).map( ( color: string ) => {
+              return convert.hex.rgb(color)
+            })
             
-                    if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(searchResult)){
-                      newColorMatches[`${selectColor.id}`].push(searchResult)
-                      break colorComparisonLoop
-                    }
+            if( typeof colorArraySearchResults === 'object') {
+              colorComparisonLoop:
+              for(let searchResultRGB of colorArraySearchResults) {
+                for(let selectColor of selectedColors) {
+                  const colorDiff = deltaE(searchResultRGB, selectColor.color)
+          
+                  if(colorDiff < 5 && !newColorMatches[`${selectColor.id}`].includes(response.searchResult)){
+                    newColorMatches[`${selectColor.id}`].push(response.searchResult)
+                    break colorComparisonLoop
                   }
                 }
               }
-            })
-        }
-        }
+            }
+          }
+        })
+
       setColorMatchedResults(newColorMatches)
     }
 
@@ -373,11 +420,9 @@ const App: React.FC = () => {
           </div>
         </Route>
 
-        <Route render={
+        {/* <Route render={
           () => <h1>404: No furniture to be found here...</h1>
-        }/>
-
-
+        }/> */}
 
       </Switch>
 
