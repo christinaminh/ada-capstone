@@ -4,7 +4,6 @@ import Color from './Color'
 import './Color.css'
 
 
-
 export interface ColorPaletteProps {
   colors: ColorProps[],
   onClickColorCallback: (color: ColorProps) => void

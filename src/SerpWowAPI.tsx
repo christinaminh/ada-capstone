@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import { SearchParams } from './components/SearchBar'
 
 const SERPWOW_API_KEY = process.env.REACT_APP_SERPWOW_API_KEY
 const SERPWOW_API_PATH = `https://api.serpwow.com/live/search?`
@@ -49,14 +48,11 @@ export const fetchSerpWowSearchResults = async (searchQuery: string, colorName: 
       // page: 1
     }
   };
-  console.log(`INSIDE fetchSerpWowSearchResults searching for ${colorName} ${searchQuery} `)
-
-    // return axios.get('https://cors-anywhere.herokuapp.com/'+SERPWOW_API_PATH, APIParams)
-    return axios.get(SERPWOW_API_PATH, APIParams)
+  
+  console.log(`Now searching for ${colorName} ${searchQuery}...`)
+  return axios.get(SERPWOW_API_PATH, APIParams)
     .then( response => {
-
       const searchResults = response.data.amazon_results
-      console.log('searchResults', searchResults)
 
       const parsedSearchResults = searchResults.map((searchObject: SearchResponse) => (
         { 
@@ -66,13 +62,11 @@ export const fetchSerpWowSearchResults = async (searchQuery: string, colorName: 
         link: searchObject.link
       } ))
 
-      console.log(parsedSearchResults)
       return parsedSearchResults
 
     })
     .catch (error => {
-      console.log('BAD SERP RESPONSE', error)
-      console.log('BAD PARAMS', APIParams)
+      console.log('Error response from Serp API:', error)
       return error.message
     })
 }

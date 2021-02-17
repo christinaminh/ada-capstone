@@ -1,7 +1,6 @@
 .search-color-palette {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-evenly; */
   margin-left: 20px
 }
 
@@ -11,7 +10,6 @@
   display: inline-block;
   margin: 0.5rem;
   border-radius: 50%;
-  /* opacity: 50%; */
   padding:0
 }
 
@@ -26,7 +24,7 @@
 
   width: 60%;
   height: 60%;
-  margin: 25% 25%;
+  margin: 25% 22%;
   padding-bottom: 5px;
 }
 .unchecked {

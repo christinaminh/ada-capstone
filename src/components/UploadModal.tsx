@@ -1,26 +1,24 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
+import { useHistory } from "react-router-dom";
+
 import UploadStatusBar from './UploadStatusBar'
+import { ColorPaletteProps } from './ColorPalette'
+
 import './UploadModal.css'
 import photoIcon from '../images/photo-upload-icon.svg'
 import button from '../images/button.svg'
-import { useHistory } from "react-router-dom";
-
-import { ColorPaletteProps } from './ColorPalette'
 
 interface Props extends ColorPaletteProps{
   show: boolean,
   onHide: () => void,
   onImageSubmitCallback: (imageUrl: string) => void,
-  // onSearchSubmitCallback: (searchQuery: string) => void,
 }
 
 const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => {
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('')
   const [showProgress, setShowProgress] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
-
-  // const [imgUrl, setImageUrl] = useState<string>('')
   
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement | null>) => {
     const file: File = (event.target.files as FileList)[0];
@@ -56,13 +54,11 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
     } else if (!showProgress && !uploadComplete) {
       return <div className='progress-bar-placeholder'></div>
     } 
-
   }
 
   
   return (
       <Modal
-        // {...props}
         show={show}
         onHide={onHide}
         onExited={onCloseUploadProgress}
@@ -70,7 +66,6 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
         aria-labelledby="contained-modal-title-vcenter"
         centered
         dialogClassName="main-modal"
-      
       >
       
         <img src={button} alt='button' className='button' onClick={onHide}/>
@@ -94,14 +89,7 @@ const UploadModal: React.FC<Props> = ({show, onHide, onImageSubmitCallback}) => 
 
         <div className='progress-container'>
           {modalFooter()}
-          {/* { showProgress ?  <UploadStatusBar onCloseUploadProgress={onCloseUploadProgress} onUploadComplete={onUploadComplete}/> : <div className='progress-bar-placeholder'></div>}
-          { uploadComplete && !showProgress ? <ColorPalette colors={colors} onClickColorCallback={onClickColorCallback} /> : null} */}
-
         </div>
-
-
-
-
     </Modal>
   )
 }

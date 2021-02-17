@@ -8,8 +8,6 @@ import { Button, Accordion, Card } from 'react-bootstrap'
 
 interface SearchFilterProps extends ColorPaletteProps {
   image: string,
-  // selectedColors: ColorProps[]
-  // onSearchSubmitCallback?: (searchQuery: string, selectedColors: ColorProps[]) => void
   setSearchQuery: (arg0: string) => void
   resetSearch: () => void
 }
@@ -107,12 +105,7 @@ const SearchFilterBar: React.FC<SearchFilterProps> = ({image, colors, onClickCol
           </Accordion.Collapse>
         </Card>
       </Accordion>
-
-
     </div>
-
-
-
   )
 }
 

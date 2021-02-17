@@ -4,21 +4,23 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-
-import './App.css';
-import UploadModal from './components/UploadModal'
-import SearchFilterBar from './components/SearchFilterBar'
-import { ColorProps } from './components/Color'
-import ColorMatchedSearchResult from './components/ColorMatchedSearchResult';
-import { SearchResultProps, ColorMatchedProps } from './components/ColorMatchedSearchResult'
-import { deltaE, getColorName } from './CompareColors'
-import { fetchSerpWowSearchResults } from './SerpWowAPI'
 import splashy  from 'splashy'
 import convert from 'color-convert'
+import { Circle } from 'styled-spinkit'
+
+import UploadModal from './components/UploadModal'
+import SearchFilterBar from './components/SearchFilterBar'
 import Header from './components/SearchHeader'
 import LandingHeader from './components/LandingHeader'
 import Footer from './components/Footer'
+import ColorMatchedResults from './components/ColorMatchedResults'
 
+import { ColorProps } from './components/Color'
+import { SearchResultProps, ColorMatchedProps } from './components/ColorMatchedSearchResult'
+import { deltaE, getColorName } from './CompareColors'
+import { fetchSerpWowSearchResults } from './SerpWowAPI'
+
+import './App.css';
 import './components/SearchPageLayout.css'
 import './components/LandingPage.css'
 import landing from './images/designer.svg'
@@ -28,24 +30,17 @@ import plusicon from './images/plus-icon.svg'
 import MORE from './images/MORE.svg'
 
 
-import { Circle } from 'styled-spinkit'
-import ColorMatchedResults from './components/ColorMatchedResults'
-
-
 const App: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState< string | null | void >(null)
   const [selectedColors, setSelectedColors] = useState<ColorProps[]>([])
   const [colorResults, setColorResults] = useState<ColorProps[]>([])
   const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
-  // const [colorMatchedResults, setColorMatchedResults] = useState<SearchResultProps[]>([])
-    // const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({})
   const [colorMatchedResults, setColorMatchedResults] = useState<ColorMatchedProps>({'1':[],'2':[],'3':[],'4':[],'5':[],'6':[]})
   const [selectedColorMatchedResults, setSelectedColorMatchedResults] = useState<SearchResultProps[]>([])
   const [uploadModalShow, setUploadModalShow] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false)
   const [referenceImage, setReferenceImage] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
-
   const resultsPerPage = 9
   const [next, setNext] = useState(resultsPerPage)
 
@@ -99,9 +94,7 @@ const App: React.FC = () => {
 
           setColorResults(colorObjects)
           setSelectedColors(colorObjects)
-          // setSearchLoading(true)
           setSearchQuery('home furniture')
-
 
         } else {
           setErrorMessage("Could not read image")
@@ -121,6 +114,7 @@ const App: React.FC = () => {
     setSearchLoading(true)
   }
 
+
   useEffect(()=> {
     let searchIsMounted = true
 
@@ -138,18 +132,17 @@ const App: React.FC = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 6000)
+
       } else {
         let colorNameSet: any = new Set()
         for( const color of selectedColors) {
           colorNameSet.add(color.name)
         }
 
-        console.log("~~~~~~~COLOR SET", colorNameSet)
         let newSearchResults = [...searchResults]
 
         for(let colorName of colorNameSet) {
 
-          console.log('LOOKING FOR COLOR', colorName, 'before FETCH')
           await fetchSerpWowSearchResults(newSearchQuery, colorName)
           // eslint-disable-next-line no-loop-func
           .then( response => {
@@ -158,8 +151,6 @@ const App: React.FC = () => {
 
               if (searchIsMounted) {
                 newSearchResults = newSearchResults.concat(response)
-
-                console.log('I GOT SEARCH RESULTS!')
   
                 setSearchResults(newSearchResults)
               }
@@ -171,17 +162,13 @@ const App: React.FC = () => {
                 setErrorMessage(null)
               }, 6000)
 
-              console.log('NO SEARCH RESULTS! I GOT AN ERROR')
-
             }
           })
         }
       }
     }
 
-    // if (searchIsMounted) {
-      onSearchSubmit(searchQuery)
-    // }
+    onSearchSubmit(searchQuery)
 
     return () => {
       searchIsMounted = false
@@ -200,21 +187,15 @@ const App: React.FC = () => {
       if(searchResults.length > 0  && selectedColors.length > 0 ) {
         const filterSearchByColor = async (selectedColors: ColorProps[], searchResults: SearchResultProps[]) => {
           const newColorMatches: ColorMatchedProps = {...colorMatchedResults}
-        
-          console.log('IN FILTER SEARCH BY COLOR')
-          
+                  
           for( const searchResult of searchResults) {
 
-            // await prominent(searchResult.imageUrl, { amount: 3, group: 30, sample: 1 })
             await splashy(searchResult.imageUrl)
               .then( response => {
 
                 const colorArraySearchResults = response.map( color => {
                   return convert.hex.rgb(color)
                 })
-    
-                // response is a nested array of rgb values [[r,g,b],...]
-                // let colorArraySearchResults = response as Array<number[]>
                 
                 if( typeof colorArraySearchResults === 'object') {
                   colorComparisonLoop:
@@ -243,7 +224,6 @@ const App: React.FC = () => {
         }    
       }
     }
-    
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResults])
@@ -283,6 +263,7 @@ const App: React.FC = () => {
 
   const resultsToShow = selectedColorMatchedResults.slice(0, next)
 
+
   return (
     <Router>
       <div className='App'>
@@ -301,38 +282,36 @@ const App: React.FC = () => {
               <Header setUploadModalShow={setUploadModalShow}/>
             </div>
 
-          <div className='search-main'>
-            <div className='search-content'>
-              { errorMessage ? <div className='error-message'>{errorMessage}</div> : <div className='error-message'></div> }
+            <div className='search-main'>
+              <div className='search-content'>
+                { errorMessage ? <div className='error-message'>{errorMessage}</div> : <div className='error-message'></div> }
 
-              <SearchFilterBar 
-                colors={colorResults}
-                // selectedColors={selectedColors}
-                onClickColorCallback={onClickColor}
-                image={referenceImage} 
-                setSearchQuery={setSearchQuery}
-                resetSearch={resetSearch}
-              />
+                <SearchFilterBar 
+                  colors={colorResults}
+                  onClickColorCallback={onClickColor}
+                  image={referenceImage} 
+                  setSearchQuery={setSearchQuery}
+                  resetSearch={resetSearch}
+                />
 
-              <div className='search-results-container'> 
-                { searchLoading && (selectedColorMatchedResults.length === 0) ? 
-                  < Circle color={'#2A9D8F'}/> 
-                  :
-                  <ColorMatchedResults resultsToRender={selectedColorMatchedResults.slice(0, next)}/>
-                }
+                <div className='search-results-container'> 
+                  { searchLoading && (selectedColorMatchedResults.length === 0) ? 
+                    < Circle color={'#2A9D8F'} size={60}/> 
+                    :
+                    <ColorMatchedResults resultsToRender={selectedColorMatchedResults.slice(0, next)}/>
+                  }
 
-                { selectedColorMatchedResults.length > resultsToShow.length ? 
-                  <div onClick={() => {setNext(next+resultsPerPage)}} className='load-more-button'><img src={MORE} alt='more results'className='more'/><span><img src={plusicon} alt='more results' className='plus-icon'/></span></div> : null }
+                  { selectedColorMatchedResults.length > resultsToShow.length ? 
+                    <div onClick={() => {setNext(next+resultsPerPage)}} className='load-more-button'><img src={MORE} alt='more results'className='more'/><span><img src={plusicon} alt='more results' className='plus-icon'/></span></div> : null }
+                </div>
               </div>
+
+              <Footer />
             </div>
-
-            <Footer />
-          </div>
-
           </div>
         </Route>
 
-        <Route path='/'>
+        <Route exact path='/'>
           <div className='landing-page'>
             <LandingHeader setUploadModalShow={setUploadModalShow}/>
 
@@ -341,7 +320,6 @@ const App: React.FC = () => {
               <div className='landing-content'>
                 <img src={landing} alt='hero' className='landing-background'></img>
 
-                
                 <div className='landing-1'>
                   <h1>A new way to find your dream furniture</h1>
                   <p>Find furniture that fits your aesthetic. 
@@ -374,17 +352,11 @@ const App: React.FC = () => {
 
               <Footer />
             </div>
-
-
-
           </div>
-
-
-
         </Route>
 
         <Route render={
-          () => <h1>Not Found</h1>
+          () => <h1>404: No furniture to be found here...</h1>
         }/>
 
 

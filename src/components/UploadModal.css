@@ -10,7 +10,6 @@
   align-self: center;
   justify-self: center;
   padding: 0rem;
-  /* margin: */
 }
 
 .browser {
@@ -98,7 +97,6 @@ text-align: center;
 .progress-bar-container {
   width: 30rem;
   height: 5rem;
-  /* border: 0.5px solid rgba(55, 68, 126, 0.5); */
   box-sizing: border-box;
   border-radius: 10px;
   background-color: #F3CCAE;

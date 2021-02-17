@@ -42,9 +42,7 @@ export const getColorName = (rgbArray: number[]) => {
 })
   const ralValue = color.color.ral
   const ralName = color.color.name
-  console.log(ralValue)
-  console.log(ralName)
-
+  
   let colorName: string = ''
 
   switch(true) {

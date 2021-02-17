@@ -8,10 +8,6 @@ import youtube from '../images/youtube.svg'
 const Footer = () => {
   return(
     <div className='footer'>
-
-      {/* <div className='email' >
-        <input type='' placeholder='Your email'/>
-      </div> */}
       <nav className='footer-nav'> 
         <ul>
           <li>

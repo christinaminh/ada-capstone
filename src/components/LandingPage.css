@@ -60,7 +60,6 @@
 }
 
 .landing-2 {
-  /* background-image: url('../images/step_1.svg'); */
   grid-area: 2 / 2 / 3 / 4;
 }
 
@@ -73,10 +72,6 @@
 .landing-3 {
   grid-area: 3 / 6 / 4 / 8;
 }
-
-/* .landing-footer {
-  grid-area: 2 / 1 / 2 / 4;
-} */
 
 .landing-1 h1 {
   font-weight: 500;

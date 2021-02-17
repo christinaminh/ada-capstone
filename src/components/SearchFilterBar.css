@@ -1,6 +1,5 @@
 .search-filter-bar {
   width: 299px;
-  /* height: 777px; */
   background-color: #264653;
   margin: 0px 50px 50px 50px;
 
@@ -26,9 +25,7 @@
   width: 230px;
   margin-top: 68px;
   box-shadow: 4px 4px 0px 0px rgba(255, 255, 255, 0.25);;
-  /* opacity: 25%; */
   align-self: center;
-  /* margin-bottom: 30px; */
   overflow: hidden;
 }
 

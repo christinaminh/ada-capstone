@@ -1,7 +1,6 @@
 .footer {
   height: 320px;
   background-color: #264653;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,9 +13,6 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
-
-  /* text-align: center; */
-
   color: #FFFFFF;
 }
 
@@ -57,9 +53,6 @@
   font-size: 12px;
   line-height: 14px;
   text-align: center;
-
-  /* White */
-
   color: #FFFFFF;
   mix-blend-mode: normal;
   opacity: 0.75;

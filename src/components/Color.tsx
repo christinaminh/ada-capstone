@@ -40,17 +40,10 @@ const Color: React.FC<ColorProps & ColorCallback> = ({...props}) => {
 
 
   return(
-
       <div className={selected ? 'selected color-item': 'color-item '} style={colorItemStyle} onClick={handleClickedColor}>
         <img src={checkmark} alt='select color' className={selected ? 'checked' : 'unchecked'}/>
 
       </div>
-
-
-
-      
-
-
   )
 }
 
