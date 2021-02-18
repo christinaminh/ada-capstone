@@ -20,11 +20,11 @@
 
 
 .checked-color-item {
-  opacity: 100%;
   width: 60%;
   height: 60%;
   margin: 25% 22%;
   padding-bottom: 5px;
+  opacity: 100%;
 }
 .unchecked-color-item {
   opacity: 0%;
