@@ -19,14 +19,14 @@
 }
 
 
-.checked {
+.checked-color-item {
   opacity: 100%;
   width: 60%;
   height: 60%;
   margin: 25% 22%;
   padding-bottom: 5px;
 }
-.unchecked {
+.unchecked-color-item {
   opacity: 0%;
   position: relative;
   object-fit: contain;
